@@ -1,0 +1,1 @@
+{% extends 'owner/base.html' %}{% block staff_content %}<h1 class="page-title">{{ title|title }}</h1><article class="staff-panel"><form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button class="button">Save</button></form></article>{% endblock %}
