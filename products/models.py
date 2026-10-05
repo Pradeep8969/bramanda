@@ -119,6 +119,11 @@ class ProductVariant(models.Model):
         constraints = [models.UniqueConstraint(fields=['product', 'size', 'color'], name='unique_product_size_color')]
 
     @property
+    def stock_level(self):
+        from inventory.stock_levels import stock_level
+        return stock_level(self.stock_quantity)
+
+    @property
     def in_stock(self):
         return self.stock_quantity > 0
 

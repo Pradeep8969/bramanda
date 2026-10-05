@@ -125,3 +125,13 @@ textarea { width:100%; resize:vertical; padding:12px; border:1px solid var(--bor
 .order-item h3 { margin-top:0; }
 @media (max-width:800px) { .checkout-layout { grid-template-columns:1fr; gap:32px; }.order-tracker { grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px 12px; } }
 @media (max-width:480px) { .order-card { padding:20px; }.order-tracker { grid-template-columns:repeat(2,minmax(0,1fr)); }.status-list { gap:20px; } }
+
+/* Staff operations */
+.staff-nav { padding-bottom:24px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+.staff-cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; margin:32px 0 48px; }
+.staff-card,.staff-panel { padding:24px; background:#eeeee6; border:1px solid var(--border); }
+.staff-card p { font-size:13px; color:var(--muted); }.staff-card strong { font-size:36px; }
+.staff-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; margin:28px 0; }
+.staff-panel h2 { font-size:24px; }.table-scroll { overflow-x:auto; }.table-scroll table { min-width:760px; }
+.staff-panel p,.staff-panel div { overflow-wrap:anywhere; }.stock-form { max-width:650px; margin-top:28px; }
+@media(max-width:800px) { .staff-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }.staff-columns { grid-template-columns:1fr; } }
