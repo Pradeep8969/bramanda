@@ -1,0 +1,15 @@
+﻿{% extends 'base.html' %}
+{% block title %}Checkout | BRAMANDA{% endblock %}
+{% block content %}
+<section class="container section"><p class="eyebrow">One step closer</p><h1 class="page-title">Checkout</h1>
+<div class="checkout-layout">
+<div><h2 class="availability-title">Delivery details</h2><p class="muted">Your details are saved with this order. Your profile will stay unchanged.</p>
+<form method="post" class="account-form">{% csrf_token %}{% include 'accounts/_fields.html' %}
+<p class="muted">Pay in cash when your order is delivered.</p><button class="button" type="submit">Place Order &rarr;</button></form>
+<a class="text-link" href="{% url 'cart:detail' %}">&larr; Back to cart</a></div>
+<aside class="cart-summary checkout-summary"><h2>Your order</h2>
+{% for item in items %}<div class="checkout-line"><strong>{{ item.variant.product.name }}</strong><p class="muted">{{ item.variant.color.name }} / {{ item.variant.size.name }}</p><p>Rs. {{ item.unit_price|floatformat:2 }} × {{ item.quantity }} <strong>Rs. {{ item.subtotal|floatformat:2 }}</strong></p></div>{% endfor %}
+{% include 'orders/_totals.html' %}
+<p class="muted">Delivery fee: fixed Rs. {{ shipping_cost|floatformat:2 }}. Stock and prices are checked again when you place your order.</p>
+</aside></div></section>{% endblock %}
+

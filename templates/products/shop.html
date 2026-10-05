@@ -1,0 +1,18 @@
+﻿{% extends 'base.html' %}
+{% block title %}Shop | BRAMANDA{% endblock %}
+{% block content %}
+<section class="container section">
+<p class="eyebrow">The BRAMANDA collection</p><h1 class="page-title">Everyday. Your way.</h1><p class="muted">Discover your next essential.</p>
+<form class="filters" method="get" action="{% url 'products:shop' %}">
+<div class="search-field"><label for="search">Search</label><input id="search" type="search" name="q" value="{{ q }}" placeholder="Search the collection"></div>
+<div><label for="category">Category</label><select id="category" name="category"><option value="">All categories</option>{% for category in categories %}<option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select></div>
+<div><label for="color">Color</label><select id="color" name="color"><option value="">All colors</option>{% for color in colors %}<option value="{{ color.name }}" {% if selected_color|lower == color.name|lower %}selected{% endif %}>{{ color.name }}</option>{% endfor %}</select></div>
+<div><label for="size">Size</label><select id="size" name="size"><option value="">All sizes</option>{% for size in sizes %}<option value="{{ size.name }}" {% if selected_size|lower == size.name|lower %}selected{% endif %}>{{ size.name }}</option>{% endfor %}</select></div>
+<div><label for="sort">Sort by</label><select id="sort" name="sort"><option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option><option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price Low to High</option><option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price High to Low</option><option value="name" {% if sort == 'name' %}selected{% endif %}>Name A-Z</option></select></div>
+<button class="button" type="submit">Apply</button><a class="text-link" href="{% url 'products:shop' %}">Reset</a>
+</form>
+<p class="result-count" role="status">{{ products|length }} product{{ products|length|pluralize }}</p>
+<div class="product-grid">{% for product in products %}{% include 'products/_card.html' %}{% empty %}<div class="empty-state"><h2>No products found</h2><p>Try another search or adjust your filters to discover more.</p><a class="text-link" href="{% url 'products:shop' %}">Browse all products &rarr;</a></div>{% endfor %}</div>
+</section>
+{% endblock %}
+

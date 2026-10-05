@@ -1,0 +1,14 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+<p class="eyebrow">Independent spirit. Everyday essentials.</p><h1>BRAMANDA</h1><p class="tagline">THE UNDISCOVERED</p>
+<p class="hero-copy">Find your own direction.<br>Wear it with intention.</p>
+<a class="button" href="{% url 'products:shop' %}">Shop Now &rarr;</a><div class="hero-mark" aria-hidden="true">B.</div>
+</section>
+<section class="container section">
+<div class="section-heading"><div><p class="eyebrow">The edit</p><h2>Featured essentials</h2></div><a href="{% url 'products:shop' %}">Explore the shop &rarr;</a></div>
+<div class="product-grid">{% for product in featured_products %}{% include 'products/_card.html' %}{% empty %}<p class="empty-state">Our next collection is taking shape. Check back soon.</p>{% endfor %}</div>
+</section>
+<section class="brand-statement"><p class="eyebrow">Our perspective</p><h2>For the paths<br>still undiscovered.</h2><p>Quiet confidence. Everyday expression. BRAMANDA is for those who move through the world on their own terms.</p></section>
+{% endblock %}
+

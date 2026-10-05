@@ -1,0 +1,25 @@
+﻿{% extends 'base.html' %}
+{% block title %}{{ product.name }} | BRAMANDA{% endblock %}
+{% block content %}
+<section class="container section">
+<a class="text-link" href="{% url 'products:shop' %}">&larr; Back to shop</a>
+<div class="product-detail">
+<div class="gallery"><div class="product-image">{% include 'products/_image.html' %}</div><div class="gallery-grid">{% for photo in product.images.all %}{% if photo.image %}<a href="{{ photo.image.url }}"><img src="{{ photo.image.url }}" alt="{{ photo.alt_text|default:product.name }}" loading="lazy"></a>{% endif %}{% endfor %}</div></div>
+<div class="product-info"><p class="eyebrow">{{ product.category.name }}</p><h1 class="detail-title">{{ product.name }}</h1><p class="detail-price">Rs. {{ product.price|floatformat:2 }}</p>
+<p class="stock {% if not product.available %}sold-out{% endif %}">{% if product.available %}In Stock{% else %}Out of Stock{% endif %}</p>
+<div class="description">{{ product.description|linebreaks }}</div>
+<h2 class="availability-title">Colors &amp; sizes</h2><p class="muted">Available combinations and current stock.</p>
+{% for color, variants in variant_groups.items %}<table class="variant-table"><caption>{{ color }}</caption><thead><tr><th scope="col">Size</th><th scope="col">Availability</th></tr></thead><tbody>{% for variant in variants %}<tr><th scope="row">{{ variant.size }}</th><td>{% if variant.stock %}{{ variant.stock }} available{% else %}<span class="sold-out">Unavailable</span>{% endif %}</td></tr>{% endfor %}</tbody></table>{% empty %}<p class="muted">No size and color combinations are currently available.</p>{% endfor %}
+{% if product.available %}
+<form method="post" action="{% url 'cart:add' product.slug %}" class="variant-selector">
+{% csrf_token %}
+<label for="{{ cart_form.variant.id_for_label }}">Color / size</label>{{ cart_form.variant }}
+<p class="muted">Only existing, in-stock combinations can be selected. Stock is shown beside each combination.</p>
+<label for="{{ cart_form.quantity.id_for_label }}">Quantity</label>{{ cart_form.quantity }}
+<button class="button cart-button" type="submit">Add to Cart</button>
+</form>
+{% if not user.is_authenticated %}<p class="muted">Sign in to add this selection to your cart.</p>{% endif %}
+{% else %}<button class="button cart-button" disabled aria-describedby="cart-note">Add to Cart</button><p id="cart-note" class="muted">This product is currently out of stock.</p>{% endif %}
+</div></div></section>
+{% endblock %}
+

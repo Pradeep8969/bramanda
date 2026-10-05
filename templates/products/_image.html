@@ -1,0 +1,6 @@
+﻿{% if product.image %}
+<img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+{% else %}
+<div class="image-placeholder" role="img" aria-label="{{ product.name }} — image coming soon"><span class="placeholder-monogram" aria-hidden="true">B.</span><span>BRAMANDA</span><small>Image coming soon</small></div>
+{% endif %}
+

@@ -1,0 +1,29 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}BRAMANDA | The Undiscovered{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+<header class="site-header">
+<a class="brand" href="{% url 'home' %}">BRAMANDA<small>THE UNDISCOVERED</small></a>
+<nav aria-label="Main navigation">
+<a href="{% url 'home' %}">Home</a><a href="{% url 'products:shop' %}">Shop</a>
+<a href="{% url 'cart:detail' %}">Cart{% if user.is_authenticated %} ({{ cart_count }}){% endif %}</a>
+{% if user.is_authenticated %}
+<a href="{% url 'orders:list' %}">My Orders</a><a href="{% url 'accounts:profile' %}">Profile</a>
+<form method="post" action="{% url 'accounts:logout' %}" class="nav-form">{% csrf_token %}<button type="submit" class="nav-button">Logout</button></form>
+<span class="greeting">Hello, {{ user.first_name|default:user.username }}</span>
+{% else %}
+<a href="{% url 'accounts:login' %}">Login</a><a href="{% url 'accounts:register' %}">Register</a>
+{% endif %}
+</nav>
+</header>
+<main>
+{% if messages %}<div class="messages container" aria-live="polite">{% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}</main>
+<footer><strong>BRAMANDA</strong><span>THE UNDISCOVERED</span><p>Made for your own direction.</p></footer>
+</body></html>
+

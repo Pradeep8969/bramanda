@@ -1,0 +1,12 @@
+﻿{% extends 'base.html' %}
+{% block title %}Login | BRAMANDA{% endblock %}
+{% block content %}
+<section class="auth-panel section">
+<p class="eyebrow">Welcome back</p><h1 class="page-title">Your next discovery.</h1><p class="muted">Sign in to your BRAMANDA account.</p>
+<form method="post" class="account-form">
+{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
+{% include 'accounts/_fields.html' %}
+<button class="button" type="submit">Login</button>
+</form><p class="muted">New here? <a class="text-link" href="{% url 'accounts:register' %}">Create an account</a></p>
+</section>{% endblock %}
+

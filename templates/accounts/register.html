@@ -1,0 +1,9 @@
+﻿{% extends 'base.html' %}
+{% block title %}Register | BRAMANDA{% endblock %}
+{% block content %}
+<section class="auth-panel section">
+<p class="eyebrow">Join the undiscovered</p><h1 class="page-title">Make it yours.</h1><p class="muted">Create your customer account.</p>
+<form method="post" class="account-form">{% csrf_token %}{% include 'accounts/_fields.html' %}<button class="button" type="submit">Create Account</button></form>
+<p class="muted">Already a member? <a class="text-link" href="{% url 'accounts:login' %}">Login</a></p>
+</section>{% endblock %}
+

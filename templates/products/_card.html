@@ -1,0 +1,7 @@
+﻿<article class="product-card">
+<a class="product-image" href="{% url 'products:detail' product.slug %}" aria-label="View {{ product.name }}">{% include 'products/_image.html' %}</a>
+<p class="eyebrow">{{ product.category.name }}</p><h3><a href="{% url 'products:detail' product.slug %}">{{ product.name }}</a></h3>
+<div class="product-meta"><strong>Rs. {{ product.price|floatformat:2 }}</strong><span class="stock {% if not product.available %}sold-out{% endif %}">{% if product.available %}In Stock{% else %}Out of Stock{% endif %}</span></div>
+<a class="text-link" href="{% url 'products:detail' product.slug %}">View Product &rarr;</a>
+</article>
+
