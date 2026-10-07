@@ -1,1 +1,15 @@
-{% extends 'base.html' %}{% block title %}Staff | BRAMANDA{% endblock %}{% block content %}<div class="dashboard-shell dashboard-shell"><nav class="dashboard-sidebar" aria-label="Staff navigation"><a href="{% url 'dashboard:home' %}">Dashboard</a><a href="{% url 'dashboard:orders' %}">Orders</a><a href="{% url 'dashboard:customers' %}">Customers</a><a href="{% url 'dashboard:inventory' %}">Inventory</a><form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="nav-button" type="submit">Logout &rarr;</button></form></nav><section class="dashboard-content"><header class="dashboard-topbar"><p class="eyebrow">BRAMANDA / Staff workspace</p><span>{{ user.first_name|default:user.username }}</span></header>{% block staff_content %}{% endblock %}</section></div>{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Staff Portal | BRAMANDA{% endblock %}
+{% block content %}
+<div class="dashboard-shell staff-shell">
+  <nav class="dashboard-sidebar" aria-label="Staff navigation">
+    <div class="staff-sidebar-brand"><strong>BRAMANDA</strong><span>STAFF PORTAL</span></div>
+    <div class="staff-navigation-links"><a href="{% url 'dashboard:home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Dashboard</a><a href="{% url 'dashboard:orders' %}"{% if request.resolver_match.url_name == 'orders' or request.resolver_match.url_name == 'order_detail' %} aria-current="page"{% endif %}>Orders</a><a href="{% url 'dashboard:customers' %}"{% if request.resolver_match.url_name == 'customers' %} aria-current="page"{% endif %}>Customers</a><a href="{% url 'dashboard:inventory' %}"{% if request.resolver_match.url_name == 'inventory' %} aria-current="page"{% endif %}>Inventory</a></div>
+    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="nav-button" type="submit">Logout &rarr;</button></form>
+  </nav>
+  <section class="dashboard-content">
+    <header class="dashboard-topbar"><p class="eyebrow">Staff Dashboard</p><div class="staff-user"><span class="staff-user-name">{{ user.username }}</span><span class="staff-role">Staff Portal &middot; {{ user.get_role_display }}</span></div></header>
+    {% block staff_content %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

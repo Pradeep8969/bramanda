@@ -1,1 +1,7 @@
-{% extends 'dashboard/base.html' %}{% block staff_content %}<h1 class="page-title">Staff Dashboard</h1><p class="muted">Process orders and keep stock up to date.</p><div class="staff-cards">{% for label, count in cards %}<article class="staff-card"><p>{{ label }}</p><strong>{{ count }}</strong></article>{% endfor %}</div><div class="section-heading"><h2>Recent orders</h2><a href="{% url 'dashboard:orders' %}">View all orders</a></div>{% include 'dashboard/_orders.html' %}{% endblock %}
+{% extends 'dashboard/base.html' %}
+{% block staff_content %}
+<header class="staff-page-heading"><p class="eyebrow">Operations overview</p><h1 class="page-title">Staff Dashboard</h1><p class="muted">Process orders and keep stock up to date.</p></header>
+<div class="staff-cards">{% for label, count in cards %}<article class="staff-card"><p>{{ label }}</p><strong>{{ count }}</strong></article>{% endfor %}</div>
+<div class="section-heading"><h2>Recent orders</h2><a class="btn btn-outline" href="{% url 'dashboard:orders' %}">View all orders &rarr;</a></div>
+{% include 'dashboard/_orders.html' %}
+{% endblock %}
