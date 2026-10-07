@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Complete Social Signup | BRAMANDA{% endblock %}
+{% block content %}
+<section class="container section account-page">
+  <div class="account-card">
+    <header class="account-heading"><p class="eyebrow">BRAMANDA</p><h1 class="page-title">One more detail.</h1><p class="muted">Confirm your account details to complete signup. No BRAMANDA password is required.</p></header>
+    <p class="muted">If this email already belongs to your BRAMANDA account, <a class="text-link" href="{% url 'accounts:login' %}">sign in with your existing credentials</a>, then <a class="text-link" href="{% url 'socialaccount_connections' %}">connect your social account</a>.</p>
+    <form method="post" action="{% url 'socialaccount_signup' %}" class="account-form customer-account-form">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}{% include 'accounts/_account_field.html' %}{% endfor %}
+      <button class="button" type="submit">Complete Signup &rarr;</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

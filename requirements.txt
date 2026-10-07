@@ -1,0 +1,4 @@
+# Direct runtime dependencies; socialaccount installs its OAuth/crypto dependencies.
+Django==6.1.1
+Pillow==12.3.0
+django-allauth[socialaccount]==65.19.7

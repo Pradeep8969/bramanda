@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% load static socialaccount %}
 {% block title %}Register | BRAMANDA{% endblock %}
 {% block content %}
 <section class="container section account-page register-page">
   <div class="account-layout">
     <header class="account-introduction"><p class="eyebrow">BRAMANDA / The undiscovered</p><h1 class="page-title">Make it yours.</h1><p class="muted">Create your customer account. Keep your details close and follow every order, from your first essential to your next discovery.</p><p class="account-intro-note">Independent spirit.<br>Everyday expression.</p></header>
     <div class="account-card"><h2 class="account-card-title">Create Account</h2>
+      <link rel="stylesheet" href="{% static 'css/social-auth.css' %}">
+      {% include 'accounts/_social_login.html' %}
       <form method="post" class="account-form customer-account-form registration-form">
         {% csrf_token %}
         {% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}

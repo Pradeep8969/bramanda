@@ -16,7 +16,7 @@ def register(request):
     form = RegistrationForm(request.POST if request.method == 'POST' else None)
     if request.method == 'POST' and form.is_valid():
         user = form.save()
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, 'Welcome to BRAMANDA! Your customer account is ready.')
         return redirect('products:shop')
     return render(request, 'accounts/register.html', {'form': form})

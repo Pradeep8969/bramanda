@@ -1,0 +1,11 @@
+.social-auth { display: grid; gap: 12px; margin-top: 24px; }
+.social-auth form { margin: 0; }
+.social-auth-button { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; min-height: 50px; padding: 14px 20px; border: 1px solid #d6cec1; border-radius: 3px; background: #faf8f4; color: #292621; font: inherit; font-size: 14px; cursor: pointer; transition: background .15s, border-color .15s; }
+.social-auth-button:hover:not(:disabled) { background: #f0ebe2; border-color: #a48b64; }
+.social-auth-button:focus-visible { outline: 2px solid #8b7045; outline-offset: 3px; }
+.social-auth-button:disabled { opacity: .65; cursor: not-allowed; }
+.social-auth-mark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; font-weight: 700; font-size: 20px; }
+.social-auth-note { margin: 2px 0 0; font-size: 12px; line-height: 1.6; }
+.social-auth-divider { display: flex; align-items: center; gap: 16px; margin: 24px 0; color: #746b5e; font-size: 11px; letter-spacing: .15em; }
+.social-auth-divider::before, .social-auth-divider::after { content: ''; flex: 1; height: 1px; background: #ded7cb; }
+@media (max-width: 480px) { .social-auth-button { padding: 13px 12px; gap: 10px; } }

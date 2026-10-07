@@ -1,0 +1,20 @@
+{% load socialaccount %}
+{% get_providers as social_providers %}
+<div class="social-auth" aria-label="Social sign in">
+  {% for provider in social_providers reversed %}
+    {% if provider.id == 'google' or provider.id == 'facebook' %}
+      <form method="post" action="{% provider_login_url provider process='login' %}">
+        {% csrf_token %}
+        <button class="social-auth-button" type="submit">
+          <span class="social-auth-mark" aria-hidden="true">{% if provider.id == 'google' %}G{% else %}f{% endif %}</span>
+          Continue with {{ provider.name }}
+        </button>
+      </form>
+    {% endif %}
+  {% empty %}
+    <button class="social-auth-button" type="button" disabled aria-describedby="social-auth-unavailable"><span class="social-auth-mark" aria-hidden="true">G</span>Continue with Google</button>
+    <button class="social-auth-button" type="button" disabled aria-describedby="social-auth-unavailable"><span class="social-auth-mark" aria-hidden="true">f</span>Continue with Facebook</button>
+    <p id="social-auth-unavailable" class="social-auth-note muted">Social sign in is currently unavailable. Please use your BRAMANDA account below.</p>
+  {% endfor %}
+</div>
+<div class="social-auth-divider"><span>OR</span></div>
