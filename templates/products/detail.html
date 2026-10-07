@@ -14,8 +14,8 @@
 {% if product.available %}
 <form method="post" action="{% url 'cart:add' product.slug %}" class="variant-selector">
 {% csrf_token %}
-<div class="variant-data" hidden>{% for variant in product.storefront_variants %}<span data-id="{{ variant.pk }}" data-color="{{ variant.color.name }}" data-size="{{ variant.size.name }}" data-stock="{{ variant.stock_quantity }}"></span>{% endfor %}</div><div class="visual-variants" hidden><fieldset class="color-options"><legend>Color</legend><div class="selector-options"></div></fieldset><fieldset class="size-options"><legend>Size</legend><div class="selector-options"></div></fieldset><p class="selection-stock" aria-live="polite"></p></div><label for="{{ cart_form.variant.id_for_label }}">Color / size</label>{{ cart_form.variant }}
-<p class="muted">Only existing, in-stock combinations can be selected. Stock is shown beside each combination.</p>
+<div class="variant-data" hidden>{% for variant in product.storefront_variants %}<span data-id="{{ variant.pk }}" data-color="{{ variant.color.name }}" data-size="{{ variant.size.name }}" data-stock="{{ variant.stock_quantity }}"></span>{% endfor %}</div><div class="visual-variants" hidden><fieldset class="color-options"><legend>Color</legend><div class="selector-options"></div></fieldset><fieldset class="size-options"><legend>Size</legend><div class="selector-options"></div></fieldset><p class="selection-stock" aria-live="polite"></p></div><div class="variant-fallback"><label for="{{ cart_form.variant.id_for_label }}">Color / size</label>{{ cart_form.variant }}
+<p class="muted">Only existing, in-stock combinations can be selected. Stock is shown beside each combination.</p></div>
 <label for="{{ cart_form.quantity.id_for_label }}">Quantity</label><div class="quantity-control"><button type="button" data-quantity="-1" aria-label="Decrease quantity">&minus;</button>{{ cart_form.quantity }}<button type="button" data-quantity="1" aria-label="Increase quantity">+</button></div>
 <button class="button cart-button" type="submit">Add to Cart</button>
 </form>

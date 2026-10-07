@@ -275,10 +275,10 @@ class StaffDashboardTests(TestCase):
         self.assertFalse(InventoryTransaction.objects.exists())
 
     def test_navigation_roles(self):
-        for user in [self.staff, self.owner]:
+        for user, owner, staff in [(self.customer, False, False), (self.staff, False, True), (self.owner, True, False)]:
             self.client.force_login(user)
-            self.assertContains(self.client.get('/'), 'Staff Dashboard')
-        self.client.force_login(self.customer)
-        self.assertNotContains(self.client.get('/'), 'Staff Dashboard')
+            response = self.client.get('/')
+            self.assertEqual('Staff Dashboard' in response.content.decode(), staff)
+            self.assertEqual('Owner Dashboard' in response.content.decode(), owner)
         self.client.logout()
         self.assertNotContains(self.client.get('/'), 'Staff Dashboard')

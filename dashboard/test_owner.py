@@ -291,7 +291,7 @@ class OwnerTests(TestCase):
         self.assertEqual(csrf.post('/owner/products/add/',data).status_code,302)
 
     def test_navigation(self):
-        for user,owner,staff in [(self.owner,True,True),(self.staff,False,True),(self.customer,False,False)]:
+        for user,owner,staff in [(self.owner,True,False),(self.staff,False,True),(self.customer,False,False)]:
             self.client.force_login(user)
             content=self.client.get('/').content.decode()
             self.assertEqual('Owner Dashboard' in content,owner)

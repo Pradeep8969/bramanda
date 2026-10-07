@@ -91,7 +91,7 @@
     });
     const selected = variants.find(variant => variant.id === select.value);
     visual.querySelector('.selection-stock').textContent = selected ?
-      selected.stock + ' available' : 'Choose a color and size, or use the combination list below.';
+      selected.stock + ' available' : 'Choose a color and size.';
   }
   select.addEventListener('change', () => {
     const selected = variants.find(variant => variant.id === select.value);
@@ -101,6 +101,15 @@
     }
     draw();
   });
+  const initial = variants.find(variant => variant.id === select.value);
+  if (initial) { color = initial.color; size = initial.size; }
   visual.hidden = false;
   draw();
+  form.classList.add('variants-enhanced');
+  select.addEventListener('invalid', event => {
+    event.preventDefault();
+    visual.querySelector('.selection-stock').textContent = 'Please choose an available color and size.';
+    const first = visual.querySelector('button:not(:disabled)');
+    if (first) first.focus();
+  });
 })();
