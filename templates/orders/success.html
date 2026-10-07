@@ -1,8 +1,8 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Order Confirmed | BRAMANDA{% endblock %}
 {% block content %}
 <section class="auth-panel section order-success"><p class="eyebrow">Thank you for your order</p><h1 class="page-title">Order Confirmed</h1><p>Your next BRAMANDA discovery is on its way to being prepared.</p>
-<div class="success-card"><h2>{{ order.order_number }}</h2><p>Total: <strong>Rs. {{ order.grand_total|floatformat:2 }}</strong></p><p>Payment: {{ order.get_payment_method_display }}</p><p class="muted">Payment status: {{ order.get_payment_status_display }}</p>
+<div class="success-card"><h2>{{ order.order_number }}</h2><p>Total: <strong>Rs. {{ order.grand_total|floatformat:2 }}</strong></p><p>Payment: {{ order.get_payment_method_display }}</p><p class="muted">Payment status: <span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></p>
 <h3>Deliver to</h3><p>{{ order.first_name }} {{ order.last_name }}<br>{{ order.phone_number }}</p><div class="shipping-address">{{ order.shipping_address|linebreaksbr }}</div></div>
 <div class="order-actions"><a class="button" href="{% url 'orders:detail' order.order_number %}">View Order &rarr;</a><a class="text-link" href="{% url 'products:shop' %}">Continue Shopping</a></div>
 </section>{% endblock %}

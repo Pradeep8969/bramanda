@@ -1,10 +1,10 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}My Orders | BRAMANDA{% endblock %}
 {% block content %}
 <section class="container section"><p class="eyebrow">Your BRAMANDA journey</p><h1 class="page-title">My Orders</h1>
 <div class="order-list">{% for order in orders %}
 <article class="order-card"><div><h2><a href="{% url 'orders:detail' order.order_number %}">{{ order.order_number }}</a></h2><p class="muted">{{ order.created_at|date:"d M Y, H:i" }}</p><strong>Rs. {{ order.grand_total|floatformat:2 }}</strong></div>
-<dl class="status-list"><div><dt>Order</dt><dd>{{ order.get_order_status_display }}</dd></div><div><dt>Payment</dt><dd>{{ order.get_payment_status_display }}</dd></div><div><dt>Delivery</dt><dd>{{ order.get_delivery_status_display }}</dd></div></dl>
+<dl class="status-list"><div><dt>Order</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
 <a class="text-link" href="{% url 'orders:detail' order.order_number %}">View Details &rarr;</a></article>
 {% empty %}<div class="empty-state"><h2>No orders yet.</h2><p>Your next discovery starts in the shop.</p><a class="button" href="{% url 'products:shop' %}">Explore the Shop &rarr;</a></div>{% endfor %}</div>
 </section>{% endblock %}

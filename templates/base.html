@@ -1,31 +1,8 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}BRAMANDA | The Undiscovered{% endblock %}</title>
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-</head>
-<body>
-<header class="site-header">
-<a class="brand" href="{% url 'home' %}">BRAMANDA<small>THE UNDISCOVERED</small></a>
-<nav aria-label="Main navigation">
-<a href="{% url 'home' %}">Home</a><a href="{% url 'products:shop' %}">Shop</a>
-<a href="{% url 'cart:detail' %}">Cart{% if user.is_authenticated %} ({{ cart_count }}){% endif %}</a>
-{% if user.is_authenticated %}
-{% if user.role == 'OWNER' %}<a href="{% url 'owner:home' %}">Owner Dashboard</a>{% endif %}
-{% if user.role == 'STAFF' or user.role == 'OWNER' %}<a href="{% url 'dashboard:home' %}">Staff Dashboard</a>{% endif %}
-<a href="{% url 'orders:list' %}">My Orders</a><a href="{% url 'accounts:profile' %}">Profile</a>
-<form method="post" action="{% url 'accounts:logout' %}" class="nav-form">{% csrf_token %}<button type="submit" class="nav-button">Logout</button></form>
-<span class="greeting">Hello, {{ user.first_name|default:user.username }}</span>
-{% else %}
-<a href="{% url 'accounts:login' %}">Login</a><a href="{% url 'accounts:register' %}">Register</a>
-{% endif %}
-</nav>
-</header>
-<main>
-{% if messages %}<div class="messages container" aria-live="polite">{% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
-{% block content %}{% endblock %}</main>
-<footer><strong>BRAMANDA</strong><span>THE UNDISCOVERED</span><p>Made for your own direction.</p></footer>
-</body></html>
-
+{% load static %}
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{% block title %}BRAMANDA | The Undiscovered{% endblock %}</title><link rel="stylesheet" href="{% static 'css/base.css' %}"><link rel="stylesheet" href="{% static 'css/storefront.css' %}"><link rel="stylesheet" href="{% static 'css/dashboard.css' %}"><script src="{% static 'js/main.js' %}" defer></script><script src="{% static 'js/product.js' %}" defer></script></head>
+<body><a class="skip-link" href="#main-content">Skip to content</a><div class="announcement">BRAMANDA &nbsp; / &nbsp; THE UNDISCOVERED</div>
+<header class="site-header"><a class="brand" href="{% url 'home' %}">BRAMANDA<small>THE UNDISCOVERED</small></a><button class="menu-toggle" type="button" aria-controls="main-navigation" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button>
+<nav id="main-navigation" aria-label="Main navigation"><button class="menu-close" type="button" aria-label="Close menu">Close &times;</button><div class="primary-nav"><a href="{% url 'home' %}">Home</a><a href="{% url 'products:shop' %}">Shop</a><a href="{% url 'products:shop' %}?sort=newest">New Arrivals</a><a href="{% url 'home' %}#about">About</a></div><div class="utility-nav"><a href="{% url 'products:shop' %}#search">Search</a><a href="{% if user.is_authenticated %}{% url 'accounts:profile' %}{% else %}{% url 'accounts:login' %}{% endif %}">{% if user.is_authenticated %}Account{% else %}Login{% endif %}</a><a class="cart-link" href="{% url 'cart:detail' %}"><span class="cart-count">Cart ({% if user.is_authenticated %}{{ cart_count }}{% else %}0{% endif %})</span></a></div>
+{% if user.is_authenticated %}<div class="account-nav">{% if user.role == 'OWNER' %}<a href="{% url 'owner:home' %}">Owner Dashboard</a>{% endif %}{% if user.role == 'STAFF' or user.role == 'OWNER' %}<a href="{% url 'dashboard:home' %}">Staff Dashboard</a>{% endif %}<a href="{% url 'accounts:profile' %}">Profile</a><a href="{% url 'orders:list' %}">My Orders</a><form method="post" action="{% url 'accounts:logout' %}" class="nav-form">{% csrf_token %}<button type="submit" class="nav-button">Logout</button></form></div>{% else %}<div class="account-nav"><a href="{% url 'accounts:register' %}">Register</a></div>{% endif %}</nav></header><div class="menu-backdrop" hidden></div>
+<main id="main-content" tabindex="-1">{% if messages %}<div class="messages container" aria-live="polite">{% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}{% block content %}{% endblock %}</main>
+<footer class="site-footer"><div><a class="brand" href="{% url 'home' %}">BRAMANDA<small>THE UNDISCOVERED</small></a><p>Premium essentials. Independent direction.</p></div><nav aria-label="Footer navigation"><a href="{% url 'products:shop' %}">Collection</a><a href="{% url 'home' %}#about">Our perspective</a><a href="{% url 'orders:list' %}">Your orders</a><a href="{% url 'accounts:profile' %}">Your account</a></nav><p class="footer-note">&copy; {% now 'Y' %} BRAMANDA. Made for your own direction.</p></footer></body></html>

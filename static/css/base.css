@@ -1,4 +1,4 @@
-﻿:root { color-scheme:light; font-family:"Segoe UI",Arial,sans-serif; color:#22251f; background:#f6f5f0; --muted:#686b61; --border:#d9dbd1; }
+:root { color-scheme:light; font-family:"Segoe UI",Arial,sans-serif; color:#22251f; background:#f6f5f0; --muted:#686b61; --border:#d9dbd1; }
 * { box-sizing:border-box; }
 body { margin:0; min-height:100vh; display:flex; flex-direction:column; }
 main { flex:1; }
@@ -138,3 +138,6 @@ textarea { width:100%; resize:vertical; padding:12px; border:1px solid var(--bor
 
 /* Owner analytics: dependency-free charts with visible numeric values. */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:24px 0}.stat-card{padding:22px;border:1px solid #ddd6ca;border-radius:8px;background:#fff}.stat-card p{margin:0 0 12px;color:#625d54}.stat-card strong{font-size:1.65rem}.chart-row{display:grid;grid-template-columns:55px minmax(40px,1fr) 110px;gap:10px;align-items:center;margin:16px 0;font-size:.85rem}.chart-track{height:14px;background:#eee8de;border-radius:4px;overflow:hidden}.chart-bar{height:100%;background:#8b7045}.staff-nav{flex-wrap:wrap}.staff-panel input:not([type=checkbox]),.staff-panel select,.staff-panel textarea{max-width:100%;box-sizing:border-box}@media(max-width:600px){.chart-row{grid-template-columns:45px minmax(30px,1fr) 95px}.stat-card strong{font-size:1.3rem}}
+
+/* Shared layout safety and form primitives. */
+img{max-width:100%}main,section,article,aside{min-width:0}.form-group{margin-bottom:20px}.form-error{color:#8b362b;font-size:13px;line-height:1.6}.btn-primary{background:#202020;color:#fff;border-color:#202020}.cart-count{padding:0 9px;white-space:nowrap}.gallery-thumbnail:focus-visible{outline-offset:2px}
