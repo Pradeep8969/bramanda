@@ -1,8 +1,19 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Profile | BRAMANDA{% endblock %}
 {% block content %}
-<section class="auth-panel section">
-<p class="eyebrow">Your account</p><h1 class="page-title">My profile</h1><p>Username: <strong>{{ user.username }}</strong></p>
-<form method="post" class="account-form">{% csrf_token %}{% include 'accounts/_fields.html' %}<button class="button" type="submit">Save Changes</button></form>
-</section>{% endblock %}
-
+<section class="container section account-page profile-page">
+  <div class="account-layout">
+    <header class="account-introduction"><p class="eyebrow">Your BRAMANDA account</p><h1 class="page-title">My profile</h1><p class="muted">Your details, in one place. Keep your contact information up to date for your next discovery.</p><a class="btn btn-outline" href="{% url 'orders:list' %}">My Orders &rarr;</a></header>
+    <div class="account-card"><h2 class="account-card-title">Account details</h2>
+      <div class="account-readonly"><dl><div><dt>Username</dt><dd>{{ user.username }}</dd></div></dl><p class="muted">Your username is read-only.</p></div>
+      <p class="muted account-edit-note">You can edit your personal and contact details below.</p>
+      <form method="post" class="account-form customer-account-form profile-form">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="account-field-grid">{% for field in form %}{% include 'accounts/_account_field.html' %}{% endfor %}</div>
+        <button class="button" type="submit">Save Changes &rarr;</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

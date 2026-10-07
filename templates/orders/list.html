@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}My Orders | BRAMANDA{% endblock %}
 {% block content %}
-<section class="container section"><p class="eyebrow">Your BRAMANDA journey</p><h1 class="page-title">My Orders</h1>
-<div class="order-list">{% for order in orders %}
-<article class="order-card"><div><h2><a href="{% url 'orders:detail' order.order_number %}">{{ order.order_number }}</a></h2><p class="muted">{{ order.created_at|date:"d M Y, H:i" }}</p><strong>Rs. {{ order.grand_total|floatformat:2 }}</strong></div>
-<dl class="status-list"><div><dt>Order</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
-<a class="text-link" href="{% url 'orders:detail' order.order_number %}">View Details &rarr;</a></article>
-{% empty %}<div class="empty-state"><h2>No orders yet.</h2><p>Your next discovery starts in the shop.</p><a class="button" href="{% url 'products:shop' %}">Explore the Shop &rarr;</a></div>{% endfor %}</div>
-</section>{% endblock %}
-
+<section class="container section customer-page order-history-page">
+  <header class="order-history-heading"><div><p class="eyebrow">Your BRAMANDA journey</p><h1 class="page-title">My Orders</h1><p class="muted">Your essentials. Every order, every step.</p></div><a class="text-link" href="{% url 'accounts:profile' %}">My Profile &rarr;</a></header>
+  <div class="order-list">
+    {% for order in orders %}
+    <article class="order-card history-card">
+      <div class="history-card-heading">
+        <div><p class="eyebrow">Order number</p><h2><a href="{% url 'orders:detail' order.order_number %}">{{ order.order_number }}</a></h2><p class="muted">Placed <time datetime="{{ order.created_at|date:'c' }}">{{ order.created_at|date:"d M Y, H:i" }}</time></p></div>
+        <dl class="history-total"><div><dt>Grand total</dt><dd>Rs. {{ order.grand_total|floatformat:2 }}</dd></div></dl>
+      </div>
+      <div class="history-card-footer">
+        <dl class="status-list"><div><dt>Order</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
+        <a class="btn btn-outline" aria-label="View order {{ order.order_number }}" href="{% url 'orders:detail' order.order_number %}">View Order &rarr;</a>
+      </div>
+    </article>
+    {% empty %}
+    <div class="empty-state order-history-empty"><span class="empty-monogram" aria-hidden="true">B.</span><p class="eyebrow">Your next discovery</p><h2>No orders yet.</h2><p class="muted">Find the essentials that move with you.</p><a class="button" href="{% url 'products:shop' %}">Shop Collection &rarr;</a></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

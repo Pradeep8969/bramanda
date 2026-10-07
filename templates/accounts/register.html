@@ -1,9 +1,33 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Register | BRAMANDA{% endblock %}
 {% block content %}
-<section class="auth-panel section">
-<p class="eyebrow">Join the undiscovered</p><h1 class="page-title">Make it yours.</h1><p class="muted">Create your customer account.</p>
-<form method="post" class="account-form">{% csrf_token %}{% include 'accounts/_fields.html' %}<button class="button" type="submit">Create Account</button></form>
-<p class="muted">Already a member? <a class="text-link" href="{% url 'accounts:login' %}">Login</a></p>
-</section>{% endblock %}
-
+<section class="container section account-page register-page">
+  <div class="account-layout">
+    <header class="account-introduction"><p class="eyebrow">BRAMANDA / The undiscovered</p><h1 class="page-title">Make it yours.</h1><p class="muted">Create your customer account. Keep your details close and follow every order, from your first essential to your next discovery.</p><p class="account-intro-note">Independent spirit.<br>Everyday expression.</p></header>
+    <div class="account-card"><h2 class="account-card-title">Create Account</h2>
+      <form method="post" class="account-form customer-account-form registration-form">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        <fieldset class="account-fieldset"><legend>Personal details</legend><div class="account-field-grid">
+          {% include 'accounts/_account_field.html' with field=form.first_name %}
+          {% include 'accounts/_account_field.html' with field=form.last_name %}
+        </div></fieldset>
+        <fieldset class="account-fieldset"><legend>Account</legend><div class="account-field-grid">
+          {% include 'accounts/_account_field.html' with field=form.username %}
+          {% include 'accounts/_account_field.html' with field=form.email %}
+        </div></fieldset>
+        <fieldset class="account-fieldset"><legend>Contact</legend><div class="account-field-grid">
+          {% include 'accounts/_account_field.html' with field=form.phone_number %}
+          {% include 'accounts/_account_field.html' with field=form.address %}
+        </div></fieldset>
+        <fieldset class="account-fieldset"><legend>Security</legend><div class="account-field-grid">
+          {% include 'accounts/_account_field.html' with field=form.password1 %}
+          {% include 'accounts/_account_field.html' with field=form.password2 field_label='Confirm password' %}
+        </div></fieldset>
+        <button class="button" type="submit">Create Account &rarr;</button>
+      </form>
+      <p class="account-login-link muted">Already a member? <a class="text-link" href="{% url 'accounts:login' %}">Login</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
