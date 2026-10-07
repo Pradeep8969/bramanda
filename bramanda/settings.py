@@ -154,11 +154,16 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = False
 # Credentials belong in admin SocialApp records, never in settings/source control.
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {'SCOPE': ['profile', 'email']},
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['public_profile', 'email'],
-        'FIELDS': ['id', 'first_name', 'last_name', 'name', 'email'],
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+            "prompt": "select_account",
+        },
+        "OAUTH_PKCE_ENABLED": True,
     },
 }
 
