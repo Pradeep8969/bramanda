@@ -1,1 +1,2 @@
-{% extends 'owner/base.html' %}{% block staff_content %}<h1 class="page-title">Invalid update</h1><div class="form-errors">{{ form.errors }}{{ error }}</div><a href="{% url 'owner:orders' %}">Return to orders</a>{% endblock %}
+{% extends 'owner/base.html' %}
+{% block staff_content %}<header class="owner-page-heading"><p class="eyebrow">Update could not be saved</p><h1 class="page-title">Invalid update</h1></header><div class="staff-panel"><div class="form-errors" role="alert">{{ form.errors }}{{ error }}</div><a class="btn btn-outline" href="{% url 'owner:orders' %}">Return to orders &rarr;</a></div>{% endblock %}

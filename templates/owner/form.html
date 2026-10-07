@@ -1,1 +1,13 @@
-{% extends 'owner/base.html' %}{% block staff_content %}<h1 class="page-title">{{ title|title }}</h1><article class="staff-panel"><form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button class="button">Save</button></form></article>{% endblock %}
+{% extends 'owner/base.html' %}
+{% block staff_content %}
+<header class="owner-page-heading"><p class="eyebrow">{% if request.resolver_match.kwargs.kind %}Catalog management{% else %}Staff management{% endif %}</p><h1 class="page-title">{{ title|title }}</h1><p class="muted">Review the details below before saving your changes.</p></header>
+<article class="staff-panel owner-form-card">
+<form method="post" enctype="multipart/form-data" class="owner-edit-form">
+{% csrf_token %}
+{% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+<fieldset class="owner-fieldset"><legend>{% if request.resolver_match.kwargs.kind %}Details{% else %}Account &amp; contact{% endif %}</legend><div class="owner-field-grid">{% for field in form %}{% if field.name != 'password1' and field.name != 'password2' and field.name != 'is_active' and field.name != 'featured' %}{% include 'owner/_field.html' %}{% endif %}{% endfor %}</div></fieldset>
+{% if form.password1 or form.password2 %}<fieldset class="owner-fieldset"><legend>Security</legend><div class="owner-field-grid">{% if form.password1 %}{% include 'owner/_field.html' with field=form.password1 %}{% endif %}{% if form.password2 %}{% include 'owner/_field.html' with field=form.password2 field_label='Confirm password' %}{% endif %}</div></fieldset>{% endif %}
+{% if form.is_active or form.featured %}<fieldset class="owner-fieldset"><legend>Visibility &amp; status</legend><div class="owner-field-grid">{% if form.is_active %}{% include 'owner/_field.html' with field=form.is_active %}{% endif %}{% if form.featured %}{% include 'owner/_field.html' with field=form.featured %}{% endif %}</div></fieldset>{% endif %}
+<div class="owner-form-actions"><button class="button" type="submit">Save changes</button><a class="btn btn-outline" href="{% if request.resolver_match.kwargs.kind %}{% url 'owner:'|add:request.resolver_match.kwargs.kind %}{% else %}{% url 'owner:staff' %}{% endif %}">Cancel</a></div>
+</form></article>
+{% endblock %}

@@ -1,1 +1,30 @@
-{% extends 'base.html' %}{% block title %}Owner | BRAMANDA{% endblock %}{% block content %}<div class="dashboard-shell owner-shell"><nav class="dashboard-sidebar" aria-label="Owner navigation"><a href="{% url 'owner:home' %}">Dashboard</a><a href="{% url 'owner:reports' %}">Reports</a><a href="{% url 'owner:products' %}">Products</a><a href="{% url 'owner:categories' %}">Categories</a><a href="{% url 'owner:sizes' %}">Sizes</a><a href="{% url 'owner:colors' %}">Colors</a><a href="{% url 'owner:variants' %}">Variants</a><a href="{% url 'owner:inventory' %}">Inventory</a><a href="{% url 'owner:staff' %}">Staff</a><a href="{% url 'owner:customers' %}">Customers</a><a href="{% url 'owner:orders' %}">Orders</a><a href="{% url 'owner:payments' %}">Payments</a><a href="{% url 'owner:activity' %}">Activity</a><form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="nav-button" type="submit">Logout &rarr;</button></form></nav><section class="dashboard-content"><header class="dashboard-topbar"><p class="eyebrow">BRAMANDA / Owner workspace</p><span>{{ user.first_name|default:user.username }}</span></header>{% block staff_content %}{% endblock %}</section></div>{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Owner Portal | BRAMANDA{% endblock %}
+{% block content %}
+<div class="dashboard-shell owner-shell">
+  <aside class="dashboard-sidebar owner-sidebar" id="owner-navigation" aria-label="Owner portal">
+    <div class="owner-sidebar-heading"><div class="owner-brand"><strong>BRAMANDA</strong><span>OWNER PORTAL</span></div><button class="owner-menu-close" type="button" aria-label="Close owner navigation" hidden>&times;</button></div>
+    <nav class="owner-navigation" aria-label="Owner navigation"><a href="{% url 'owner:home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Dashboard</a>
+<a href="{% url 'owner:reports' %}"{% if request.resolver_match.url_name == 'reports' %} aria-current="page"{% endif %}>Reports</a>
+<a href="{% url 'owner:products' %}"{% if request.resolver_match.url_name == 'products' or request.resolver_match.kwargs.kind == 'products' %} aria-current="page"{% endif %}>Products</a>
+<a href="{% url 'owner:categories' %}"{% if request.resolver_match.url_name == 'categories' or request.resolver_match.kwargs.kind == 'categories' %} aria-current="page"{% endif %}>Categories</a>
+<a href="{% url 'owner:sizes' %}"{% if request.resolver_match.url_name == 'sizes' or request.resolver_match.kwargs.kind == 'sizes' %} aria-current="page"{% endif %}>Sizes</a>
+<a href="{% url 'owner:colors' %}"{% if request.resolver_match.url_name == 'colors' or request.resolver_match.kwargs.kind == 'colors' %} aria-current="page"{% endif %}>Colors</a>
+<a href="{% url 'owner:variants' %}"{% if request.resolver_match.url_name == 'variants' or request.resolver_match.kwargs.kind == 'variants' %} aria-current="page"{% endif %}>Variants</a>
+<a href="{% url 'owner:inventory' %}"{% if request.resolver_match.url_name == 'inventory' or request.resolver_match.url_name == 'stock_adjustment' %} aria-current="page"{% endif %}>Inventory</a>
+<a href="{% url 'owner:orders' %}"{% if request.resolver_match.url_name == 'orders' or request.resolver_match.url_name == 'order_detail' or request.resolver_match.url_name == 'order_status' or request.resolver_match.url_name == 'delivery_status' or request.resolver_match.url_name == 'payment_status' %} aria-current="page"{% endif %}>Orders</a>
+<a href="{% url 'owner:customers' %}"{% if request.resolver_match.url_name == 'customers' %} aria-current="page"{% endif %}>Customers</a>
+<a href="{% url 'owner:staff' %}"{% if request.resolver_match.url_name == 'staff' or request.resolver_match.url_name == 'staff_add' or request.resolver_match.url_name == 'staff_edit' %} aria-current="page"{% endif %}>Staff</a>
+<a href="{% url 'owner:payments' %}"{% if request.resolver_match.url_name == 'payments' %} aria-current="page"{% endif %}>Payments</a>
+<a href="{% url 'owner:activity' %}"{% if request.resolver_match.url_name == 'activity' %} aria-current="page"{% endif %}>Activity</a></nav>
+    <form class="owner-logout" method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="nav-button" type="submit">Logout &rarr;</button></form>
+  </aside>
+  <div class="owner-backdrop" hidden></div>
+  <section class="dashboard-content owner-main">
+    <header class="dashboard-topbar owner-topbar"><div class="owner-topbar-title"><button class="owner-menu-toggle" type="button" aria-controls="owner-navigation" aria-expanded="false" hidden><span aria-hidden="true">&#9776;</span> Menu</button><p class="eyebrow">BRAMANDA / Owner workspace</p></div><div class="owner-identity"><strong>{{ user.username }}</strong><span>Owner Portal &middot; {{ user.get_role_display }}</span></div></header>
+    {% block staff_content %}{% endblock %}
+  </section>
+</div>
+<script src="{% static 'js/owner.js' %}" defer></script>
+{% endblock %}
