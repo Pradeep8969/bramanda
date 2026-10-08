@@ -32,7 +32,7 @@ class CustomerAuthTests(TestCase):
         for role in ('OWNER', 'STAFF'):
             with self.subTest(role=role):
                 self.client.logout()
-                self.client.post(reverse('accounts:register'), self.registration_data(username=role.lower(), role=role, is_staff='true', is_superuser='true'))
+                self.client.post(reverse('accounts:register'), self.registration_data(username=role.lower(), email=role.lower() + '@example.com', role=role, is_staff='true', is_superuser='true'))
                 user = User.objects.get(username=role.lower())
                 self.assertEqual(user.role, User.Role.CUSTOMER)
                 self.assertFalse(user.is_staff)

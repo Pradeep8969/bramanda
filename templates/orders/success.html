@@ -5,8 +5,8 @@
 <header class="confirmation-heading"><span class="success-mark" aria-hidden="true">&check;</span><p class="eyebrow">Thank you for your order</p><h1 class="page-title">Order Confirmed</h1><p>Your next BRAMANDA discovery is on its way to being prepared.</p></header>
 <div class="success-card">
 <section class="confirmation-order" aria-label="Order information"><p class="eyebrow">Order number</p><h2>{{ order.order_number }}</h2>
-<dl class="confirmation-facts"><div class="confirmation-total"><dt>Grand total</dt><dd>Rs. {{ order.grand_total|floatformat:2 }}</dd></div><div><dt>Payment method</dt><dd>{{ order.get_payment_method_display }}</dd></div><div><dt>Payment status</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div></dl></section>
+<dl class="confirmation-facts"><div class="confirmation-total"><dt>Grand total</dt><dd>Rs. {{ order.grand_total|floatformat:2 }}</dd></div><div><dt>Payment method</dt><dd>{{ order.get_payment_method_display }}</dd></div><div><dt>Payment status</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div>{% if order.payment_status == 'UNPAID' %}<div><dt>Amount Due</dt><dd>Rs. {{ order.grand_total|floatformat:2 }}</dd></div>{% endif %}</dl></section>
 <section class="confirmation-delivery" aria-label="Delivery information"><h2>Deliver to</h2><p class="delivery-name">{{ order.first_name }} {{ order.last_name }}</p><p>{{ order.phone_number }}</p><div class="shipping-address">{{ order.shipping_address|linebreaksbr }}</div></section>
 </div>
 <div class="order-actions"><a class="button" href="{% url 'orders:detail' order.order_number %}">View Order &rarr;</a><a class="btn btn-outline" href="{% url 'products:shop' %}">Continue Shopping</a></div>
-</section>{% endblock %}
+{% include 'payments/_actions.html' %}</section>{% endblock %}

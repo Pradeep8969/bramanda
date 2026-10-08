@@ -34,6 +34,8 @@ def checkout(request):
             # A SQLite writer conflict rolls back the entire service transaction.
             form.add_error(None, 'Your cart or stock changed while placing the order. Please try again.')
         else:
+            if order.payment_method == Order.PaymentMethod.ESEWA:
+                return redirect('payments:pay', transaction_uuid=order.latest_payment.transaction_uuid)
             messages.success(request, 'Thank you! Your order has been confirmed.')
             return redirect('orders:success', order_number=order.order_number)
     subtotal = cart.subtotal

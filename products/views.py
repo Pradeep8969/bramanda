@@ -54,9 +54,13 @@ def shop(request):
 def product_detail(request, slug):
     product = get_object_or_404(storefront_products().prefetch_related('images'), slug=slug)
     prepare_products([product])
-    groups = {}
+    colors = {}
     for variant in product.storefront_variants:
-        groups.setdefault(variant.color.name, []).append({'size': variant.size.name, 'stock': variant.stock_quantity})
+        color = colors.setdefault(variant.color_id, {
+            'name': variant.color.name, 'available': False, 'hex_code': variant.color.hex_code, 'sizes': [],
+        })
+        color['available'] |= variant.stock_quantity > 0
+        color['sizes'].append({'name': variant.size.name, 'stock': variant.stock_quantity, 'variant_id': variant.pk})
     return render(request, 'products/detail.html', {
-        'product': product, 'variant_groups': groups, 'cart_form': AddToCartForm(product=product),
+        'product': product, 'color_options': list(colors.values()), 'cart_form': AddToCartForm(product=product),
     })

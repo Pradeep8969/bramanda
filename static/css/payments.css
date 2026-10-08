@@ -1,0 +1,14 @@
+.payment-document { max-width: 960px; }
+.payment-document dd { overflow-wrap: anywhere; }
+.payment-document .order-item h2 { font-size: 1.1rem; }
+@media (max-width: 640px) {
+  .payment-document .confirmation-facts { display: block; }
+  .payment-document .confirmation-facts div { margin-bottom: 1rem; }
+}
+@media print {
+  header, footer, nav, .no-print, .messages, .toast-container { display: none !important; }
+  .payment-document { padding: 0; margin: 0; max-width: 100%; color: #000; background: #fff; }
+  .payment-document .eyebrow { display: block; }
+  .order-item, .confirmation-facts div { break-inside: avoid; }
+  body { background: white; }
+}

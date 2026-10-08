@@ -22,6 +22,7 @@ A clothing brand must track stock separately for each size/color combination whi
 ## Main features
 
 - Registration, username/password login, POST logout, and profile editing.
+- Required/normalized email for new password-based customers, text/HTML welcome emails, and secure customer password recovery.
 - Google/Facebook customer signup and login through django-allauth, with POST/CSRF initiation and admin-configured credentials.
 - Product search, category/size/color filtering, sorting, images, and gallery display.
 - Product variants with unique SKU, size, color, active status, and stock quantity.
@@ -106,6 +107,7 @@ See [Testing](docs/TESTING.md) for coverage and verification results.
 | --- | --- |
 | `/` | Brand home page |
 | `/register/`, `/login/`, `/logout/`, `/profile/` | Accounts; logout requires POST |
+| `/forgot-password/`, `/password-reset/done/`, `/reset/<uidb64>/<token>/`, `/reset/done/` | Customer password recovery |
 | `/accounts/` | django-allauth routes, including Google/Facebook OAuth callbacks and account connections |
 | `/shop/`, `/shop/<slug>/` | Product list and detail |
 | `/cart/` | Current user's cart |
@@ -149,7 +151,7 @@ Screenshots have not been captured for this documentation. Add verified images b
 
 ## Future improvements
 
-Possible extensions include a complete transitive dependency lock, production configuration, digital payment integration, customer notifications, delivery-provider integration, pagination, advanced accounting, and automated visual/browser tests. These are proposed improvements, not implemented features.
+Possible extensions include a complete transitive dependency lock, production configuration, digital payment integration, order/shipping notifications, durable email queues, delivery-provider integration, pagination, advanced accounting, and automated visual/browser tests. These are proposed improvements, not implemented features.
 
 ## Documentation
 
@@ -161,3 +163,7 @@ Possible extensions include a complete transitive dependency lock, production co
 - [Windows installation](docs/INSTALLATION.md)
 - [Project structure](docs/PROJECT_STRUCTURE.md)
 - [Google/Facebook social login](docs/SOCIAL_LOGIN.md)
+- [Customer email and password reset](docs/EMAIL_AND_PASSWORD_RESET.md)
+- [COD receipts and eSewa ePay V2 TEST/UAT payments](docs/ESEWA_PAYMENT.md)
+
+Email defaults to SMTP configured through environment variables; credentials are not in source. For local development without SMTP credentials, set `$env:EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'` before running Django. Configure `PUBLIC_BASE_URL` with the actual HTTPS origin in production. See the email guide for all variables, Gmail App Password setup, and production-provider guidance. Active CUSTOMER users, including social-only users, can reset or create a local BRAMANDA password through the verified email reset flow. Creating a password preserves Google/Facebook login and the existing account; OWNER, STAFF, and inactive accounts remain excluded.

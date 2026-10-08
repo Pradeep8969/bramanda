@@ -1,0 +1,12 @@
+<div class="order-actions">
+<a class="btn btn-outline" href="{% url 'payments:invoice' order.order_number %}">View Order Confirmation / Invoice</a>
+{% if order.payment_status == 'PAID' %}
+<a class="button" href="{% url 'payments:receipt' order.order_number %}">View Payment Receipt</a>
+{% elif order.can_retry_payment %}
+<form method="post" action="{% url 'payments:retry' order.order_number %}">{% csrf_token %}<button class="button" type="submit">Retry eSewa Payment</button></form>
+{% elif order.payment_method == 'ESEWA' and order.payment_status == 'PENDING' %}
+{% with attempt=order.latest_payment %}{% if attempt %}
+<a class="button" href="{% url 'payments:pay' attempt.transaction_uuid %}">Continue eSewa Payment</a>
+<form method="post" action="{% url 'payments:recheck' attempt.transaction_uuid %}">{% csrf_token %}<button class="btn btn-outline" type="submit">Re-check Payment Status</button></form>
+{% endif %}{% endwith %}
+{% endif %}</div>

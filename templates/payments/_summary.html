@@ -1,0 +1,3 @@
+<div class="stats-grid owner-metrics">{% for label, amount in payment_summary %}
+<article class="stat-card"><p>{{ label }}</p><strong>Rs. {{ amount|floatformat:2 }}</strong></article>
+{% endfor %}</div>

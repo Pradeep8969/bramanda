@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}Payment Verification | BRAMANDA{% endblock %}
+{% block content %}<section class="container section customer-page"><h1 class="page-title">Payment could not be verified</h1>
+<p>{{ error }}</p><a class="button" href="{% url 'orders:list' %}">My Orders</a></section>{% endblock %}

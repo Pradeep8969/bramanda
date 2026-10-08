@@ -11,8 +11,8 @@
         <dl class="history-total"><div><dt>Grand total</dt><dd>Rs. {{ order.grand_total|floatformat:2 }}</dd></div></dl>
       </div>
       <div class="history-card-footer">
-        <dl class="status-list"><div><dt>Order</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
-        <a class="btn btn-outline" aria-label="View order {{ order.order_number }}" href="{% url 'orders:detail' order.order_number %}">View Order &rarr;</a>
+        <dl class="status-list"><div><dt>Order Status</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment Status</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
+        <a class="btn btn-outline" aria-label="View order {{ order.order_number }}" href="{% url 'orders:detail' order.order_number %}">View Order &rarr;</a>{% include 'payments/_actions.html' %}
       </div>
     </article>
     {% empty %}

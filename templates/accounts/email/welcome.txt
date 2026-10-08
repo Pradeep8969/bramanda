@@ -1,0 +1,11 @@
+BRAMANDA – THE UNDISCOVERED
+
+Welcome, {{ customer_name }}!
+
+Your BRAMANDA customer account has been created. Discover your next essential:
+{{ shop_url }}
+
+Sign in: {{ login_url }}
+For Google/Facebook signup, use the same provider to sign in.
+
+BRAMANDA will never email your password. Keep your login details private.

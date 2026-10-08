@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Payment Status | BRAMANDA{% endblock %}
+{% block content %}<section class="container section customer-page"><p class="eyebrow">BRAMANDA / THE UNDISCOVERED</p>
+{% if payment.status == 'PAID' %}<h1 class="page-title">Payment successful</h1><p>Amount Paid: Rs. {{ payment.amount|floatformat:2 }}</p>
+{% else %}<h1 class="page-title">Payment status: {{ payment.status }}</h1><p>No paid receipt is available for this attempt.</p>{% endif %}
+<p>{{ order.order_number }}</p><p>Order Status: {{ order.get_order_status_display }}</p>
+{% if payment.review_required %}<p class="form-errors">Payment received, but this order requires staff review before fulfillment. Please contact BRAMANDA with your order number.</p>{% endif %}
+{% include 'payments/_actions.html' %}</section>{% endblock %}

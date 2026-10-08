@@ -12,14 +12,15 @@ Mocked write failures exercise transaction rollback. Sequential final-stock and 
 | --- | --- |
 | `accounts/tests.py`, `accounts/test_customer_auth.py` | Custom user defaults and roles, homepage, registration, hashed passwords, fixed CUSTOMER role, password validation, duplicate username, login/safe next, inactive login denial, POST logout, own profile editing, restricted fields, CSRF |
 | `accounts/test_social_auth.py` | Google/Facebook POST initiation and mocked callbacks, CSRF/state validation, auto-signup and returning login, CUSTOMER/privilege enforcement, no-credential pages, SocialApp/admin configuration without Sites, duplicate email rejection, explicit account connection, redirects, preserved password login/registration and management roles |
+| `accounts/test_email_password_reset.py` | Required/normalized/case-insensitive unique registration email, text/HTML welcome messages, password exclusion, post-commit rollback and SMTP failure behavior, both social signup/returning flows, unchanged roles, generic reset responses, valid/invalid/expired/replayed tokens, social first-password creation, retained SocialAccounts and Google/Facebook/password login, active CUSTOMER eligibility, email-less exclusion, identical ineligible responses, login after reset, CSRF and trusted link origin |
 | `products/tests.py`, `products/test_storefront.py` | Model/form validation, slugs/collisions, unique SKU/variant combination, nonnegative price/stock, reusable seed command, active catalog visibility, search, combined filters, sorting, galleries, featured products, navigation, bounded prefetch query count |
 | `cart/tests.py` | Login, account isolation, add/update/remove, quantity/stock limits, inactive variants, computed Decimal totals, untrusted prices, stock warnings, no stock change during cart operations, constraints, POST/CSRF requirements |
-| `orders/tests.py` | Checkout authentication/prefill, required shipping fields and COD-only input, server-controlled totals/status/customer, item snapshots, unique order numbers, stock deductions/history/cart clearing, current prices, insufficient-stock and injected-failure rollback, duplicate submission, SQLite conflict handling, own order access, tracking and history preservation |
+| `orders/tests.py` | Checkout authentication/prefill, required shipping fields and payment-method validation, server-controlled totals/status/customer, item snapshots, unique order numbers, stock deductions/history/cart clearing, current prices, insufficient-stock and injected-failure rollback, duplicate submission, SQLite conflict handling, own order access, tracking and history preservation |
 | `inventory/tests.py` | Stock increases/decreases, zero boundary, negative-stock rejection, transaction-type/sign/input validation, current database stock, rollback when history fails, history-only writes do not alter stock |
 | `dashboard/tests.py` | Staff/owner access and customer denial, superuser-role separation, metrics/stock boundaries, order search/filters, status/delivery/COD actions and audit, protected financial/user fields, POST/CSRF, read-only customers, inventory adjustments and audit-failure rollback |
 | `dashboard/test_owner.py` | All owner route guards, real login journey, metrics/charts/report calculations and inclusive dates, invalid/empty reports, best sellers/snapshots, catalog editing/toggles, stock field restrictions, staff creation/password/field restrictions/deactivation, owner inventory including inactive variants, shared order operations, payment/activity filters, customer counts, navigation and CSRF |
 
-`payments/tests.py` is a scaffold with no test methods. Payment behavior is tested through orders and dashboard because payment fields live on Order.
+`payments/tests.py` covers COD collection/invoices/receipts, eSewa HMAC and callback tampering, mocked status verification, pending/failed/cancelled/refunded states, safe retries, late/duplicate payments, inventory reconciliation/rollback, access control and CSRF. `payments/test_migrations.py` verifies legacy COD backfill without invented paid timestamps or references. The 47 new tests prohibit real gateway HTTP requests; the prior 251 tests remain green with COD expectations updated to UNPAID. See [eSewa UAT guide](ESEWA_PAYMENT.md) for browser/provider testing and configuration.
 
 ## Run the suite
 
@@ -47,15 +48,15 @@ Suggested manual review before submission: inspect storefront/product/cart/check
 
 ## Current verification
 
-The following results were verified on 2026-10-07 using the existing `.\venv\Scripts\python.exe` environment:
+The following results were verified using the existing `.\venv\Scripts\python.exe` environment on 2026-10-08. The payment integration adds 47 tests to the previous 251-test baseline. Social-login customers may create a local BRAMANDA password through the verified email reset flow without removing Google/Facebook login. Both providers remain tested through mocked OAuth callbacks before and after password creation, preserving account identity and CUSTOMER privileges.
 
 | Command | Result |
 | --- | --- |
 | `manage.py check` | Passed: no issues (0 silenced) |
-| `manage.py test` | Passed: 204 tests discovered and run; OK |
+| `manage.py test` | Passed: 298 tests discovered and run; OK |
 | `manage.py makemigrations --check --dry-run` | Passed: No changes detected |
 
-The runner created and destroyed its test database. No BRAMANDA migration files were generated. The current count includes 25 social-auth tests added to the previous 179. OAuth token/profile calls are mocked and an HTTP network guard prevents external requests during social tests. Packaged allauth migrations were applied locally for the social-login feature.
+The runner creates and destroys its test database. Email tests override Django 6.1 MAILERS with locmem; normal test-runner isolation also replaces configured mailers with locmem. No Gmail/SMTP service is contacted. OAuth token/profile calls remain mocked with an HTTP network guard. An existing registration privilege-spoofing test now uses different emails for its two independent signups to satisfy the new uniqueness requirement. The eSewa integration uses the installed requests library, now declared as a direct dependency, and three order/payment migrations. Those migrations were applied locally; checksum verification confirmed users, roles, carts, catalog/stock, SocialApps, inventory/activity history and OrderItems were preserved.
 
 ## Information not verified
 

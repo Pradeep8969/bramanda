@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Pay with eSewa | BRAMANDA{% endblock %}
+{% block content %}
+<section class="container section customer-page"><p class="eyebrow">BRAMANDA / THE UNDISCOVERED</p>
+<h1 class="page-title">Pay securely with eSewa</h1><p>{{ payment.order.order_number }}</p>
+<p>Total: Rs. {{ payment.amount|floatformat:2 }}</p><p class="muted">eSewa test checkout. Use a test wallet on the next page.</p>
+<form method="post" action="{{ payment_url }}">
+{% for name, value in fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+<button class="button" type="submit">Continue to eSewa &rarr;</button></form>
+<p><a class="text-link" href="{% url 'orders:detail' payment.order.order_number %}">Back to order</a></p>
+</section>{% endblock %}

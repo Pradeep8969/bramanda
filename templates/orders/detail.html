@@ -2,7 +2,7 @@
 {% block title %}{{ order.order_number }} | BRAMANDA{% endblock %}
 {% block content %}
 <section class="container section customer-page order-detail-page"><a class="text-link" href="{% url 'orders:list' %}">&larr; My Orders</a><header class="order-heading"><p class="eyebrow">Order details</p><h1 class="order-number">{{ order.order_number }}</h1><p class="muted">Placed {{ order.created_at|date:"d M Y, H:i" }}</p>
-</header><dl class="status-list order-statuses"><div><dt>Order</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
+</header><dl class="status-list order-statuses"><div><dt>Order Status</dt><dd><span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></dd></div><div><dt>Payment Status</dt><dd><span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></dd></div><div><dt>Delivery</dt><dd><span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></dd></div></dl>
 <section class="tracking-panel" aria-label="Order tracking"><h2 class="availability-title">Track your order</h2>
 {% if order.order_status == 'CANCELLED' %}<p class="form-errors">This order has been cancelled.</p>{% else %}
 {% if order.order_status == 'PENDING' %}<p class="muted">Your order is awaiting confirmation.</p>{% endif %}
@@ -12,5 +12,5 @@
 <div class="order-items">{% for item in order.items.all %}<article class="order-item"><div class="order-item-info"><h3>{{ item.product_name }}</h3><p class="muted">{{ item.color_name }} / {{ item.size_name }}</p><p class="item-unit-price">Rs. {{ item.unit_price|floatformat:2 }} × {{ item.quantity }}</p></div><strong class="item-total">Rs. {{ item.subtotal|floatformat:2 }}</strong></article>{% endfor %}</div>
 <section class="order-costs" aria-label="Order totals"><h2 class="availability-title">Order summary</h2>{% include 'orders/_totals.html' with subtotal=order.subtotal shipping_cost=order.shipping_cost grand_total=order.grand_total %}</section>
 </div><aside class="cart-summary delivery-card"><h2>Delivery details</h2><p>{{ order.first_name }} {{ order.last_name }}</p><p>{{ order.email }}</p><p>{{ order.phone_number }}</p><div class="shipping-address">{{ order.shipping_address|linebreaksbr }}</div><div class="order-payment"><h3>Payment method</h3><p>{{ order.get_payment_method_display }}</p><p class="muted">Payment status: <span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span></p></div></aside></div>
-</section>{% endblock %}
+{% include 'payments/_actions.html' %}</section>{% endblock %}
 

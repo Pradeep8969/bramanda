@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}{% if is_receipt %}Payment Receipt{% else %}Order Confirmation / Invoice{% endif %} | BRAMANDA{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/payments.css' %}">
+<section class="container section customer-page payment-document">
+<p class="eyebrow">BRAMANDA &ndash; THE UNDISCOVERED</p>
+<h1 class="page-title">{% if is_receipt %}Payment Receipt{% else %}Order Confirmation / Invoice{% endif %}</h1>
+<dl class="confirmation-facts">
+<div><dt>Order number</dt><dd>{{ order.order_number }}</dd></div>
+<div><dt>Customer</dt><dd>{{ order.first_name }} {{ order.last_name }} / {{ order.customer.username }}</dd></div>
+<div><dt>Email</dt><dd>{{ order.email }}</dd></div>
+<div><dt>Order date</dt><dd>{{ order.created_at|date:'d M Y, H:i' }}</dd></div>
+<div><dt>Order Status</dt><dd>{{ order.get_order_status_display }}</dd></div>
+<div><dt>Payment Method</dt><dd>{{ order.get_payment_method_display }}</dd></div>
+<div><dt>Payment Status</dt><dd>{{ order.payment_status }}</dd></div>
+{% if is_receipt %}
+<div><dt>Receipt number</dt><dd>BRM-PAY-{{ payment.pk }}</dd></div>
+<div><dt>Amount Paid</dt><dd>Rs. {{ payment.amount|floatformat:2 }}</dd></div>
+<div><dt>Paid date/time</dt><dd>{{ payment.paid_at|date:'d M Y, H:i'|default:'Not recorded (legacy payment)' }}</dd></div>
+{% if payment.payment_method == 'ESEWA' %}<div><dt>eSewa transaction</dt><dd>{{ payment.transaction_code }}</dd></div><div><dt>Provider reference</dt><dd>{{ payment.provider_reference }}</dd></div>{% endif %}
+{% elif order.payment_status != 'PAID' and order.payment_status != 'REFUNDED' %}<div><dt>Amount Due</dt><dd>Rs. {{ order.grand_total|floatformat:2 }}</dd></div>{% endif %}
+</dl>
+<div class="order-items">{% for item in order.items.all %}<article class="order-item"><div><h2>{{ item.product_name }}</h2><p>{{ item.color_name }} / {{ item.size_name }}</p><p>Rs. {{ item.unit_price|floatformat:2 }} &times; {{ item.quantity }}</p></div><strong>Rs. {{ item.subtotal|floatformat:2 }}</strong></article>{% endfor %}</div>
+{% include 'orders/_totals.html' with subtotal=order.subtotal shipping_cost=order.shipping_cost grand_total=order.grand_total %}
+<div class="order-actions no-print"><button class="button" type="button" onclick="window.print()">{% if is_receipt %}Print Receipt{% else %}Print Invoice{% endif %}</button></div>
+</section>{% endblock %}

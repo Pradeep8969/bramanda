@@ -10,6 +10,7 @@ from inventory.services import adjust_stock
 from products.models import ProductVariant
 from .forms import CheckoutForm
 from .models import Order, OrderItem
+from payments.services import create_initial_payment
 
 # One fixed delivery fee for the college version.
 SHIPPING_COST = Decimal('100.00')
@@ -49,6 +50,8 @@ def create_order_from_cart(user, cart, checkout_data):
 
     order = Order.objects.create(
         customer=user, subtotal=subtotal, shipping_cost=SHIPPING_COST,
+        payment_status='PENDING' if form.cleaned_data['payment_method'] == 'ESEWA' else 'UNPAID',
+        order_status='PENDING' if form.cleaned_data['payment_method'] == 'ESEWA' else 'CONFIRMED',
         grand_total=subtotal + SHIPPING_COST, **form.cleaned_data,
     )
     for item in items:
@@ -65,5 +68,6 @@ def create_order_from_cart(user, cart, checkout_data):
     CartItem.objects.filter(cart=cart).delete()
     cart.updated_at = timezone.now()
     cart.save(update_fields=['updated_at'])
+    create_initial_payment(order)
     return order
 

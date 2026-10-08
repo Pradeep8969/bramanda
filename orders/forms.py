@@ -11,5 +11,6 @@ class CheckoutForm(forms.Form):
         RegexValidator(r'^\+?[0-9 ()-]{7,30}$', 'Enter a valid phone number, including an area code if needed.'),
     ])
     shipping_address = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows': 4}))
-    payment_method = forms.ChoiceField(choices=Order.PaymentMethod.choices, initial=Order.PaymentMethod.COD)
+    payment_method = forms.ChoiceField(choices=Order.PaymentMethod.choices, initial=Order.PaymentMethod.COD,
+                                     widget=forms.RadioSelect)
 
