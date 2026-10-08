@@ -26,7 +26,7 @@ class OrderAdmin(ReadOnlyOrderAdminMixin, admin.ModelAdmin):
     list_filter = ('order_status', 'payment_status', 'delivery_status', 'payment_method', 'created_at')
     search_fields = ('order_number', 'customer__username', 'email', 'phone_number')
     readonly_fields = tuple(field.name for field in Order._meta.fields
-                            if field.name not in ('order_status', 'payment_status', 'delivery_status'))
+                            if field.name not in ('order_status', 'delivery_status'))
     inlines = [OrderItemInline]
 
 

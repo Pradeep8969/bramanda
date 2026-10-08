@@ -15,6 +15,7 @@ from products.models import ProductVariant
 from .forms import CODPaymentForm, DeliveryStatusForm, OrderStatusForm, StockAdjustmentForm
 from .models import StaffActivity
 from .permissions import staff_required
+from payments.services import collect_cod
 
 
 @staff_required
@@ -71,9 +72,20 @@ def update_status(request, order_number, field, form_class, action):
             return render_dashboard(request, 'dashboard/invalid.html', {'error': 'Only COD payments can be marked paid.'}, status=400)
         old = getattr(order, field)
         new = form.cleaned_data[field]
+        if (order.payment_method == 'ESEWA' and (order.payment_status != 'PAID' or order.payment_stock_released)
+                and ((field == 'order_status' and new not in ('PENDING', 'CANCELLED'))
+                     or (field == 'delivery_status' and new != 'PENDING'))):
+            return render_dashboard(request, 'dashboard/invalid.html',
+                                    {'error': 'Verify eSewa payment before fulfillment.'}, status=400)
         if old != new:
-            setattr(order, field, new)
-            order.save(update_fields=[field, 'updated_at'])
+            if field == 'payment_status':
+                try:
+                    collect_cod(order.pk)
+                except ValidationError as error:
+                    return render_dashboard(request, 'dashboard/invalid.html', {'error': '; '.join(error.messages)}, status=400)
+            else:
+                setattr(order, field, new)
+                order.save(update_fields=[field, 'updated_at'])
             StaffActivity.objects.create(staff=request.user, action=action, reference=order.order_number,
                                          description=f'{field}: {old} ? {new}')
     messages.success(request, 'Order updated successfully.')

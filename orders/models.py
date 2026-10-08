@@ -23,9 +23,11 @@ class Order(models.Model):
         CANCELLED = 'CANCELLED', 'Cancelled'
 
     class PaymentStatus(models.TextChoices):
+        UNPAID = 'UNPAID', 'Unpaid'
         PENDING = 'PENDING', 'Pending'
         PAID = 'PAID', 'Paid'
         FAILED = 'FAILED', 'Failed'
+        CANCELLED = 'CANCELLED', 'Cancelled'
         REFUNDED = 'REFUNDED', 'Refunded'
 
     class DeliveryStatus(models.TextChoices):
@@ -38,6 +40,7 @@ class Order(models.Model):
 
     class PaymentMethod(models.TextChoices):
         COD = 'COD', 'Cash on Delivery'
+        ESEWA = 'ESEWA', 'eSewa'
 
     order_number = models.CharField(max_length=40, unique=True, default=generate_order_number, editable=False)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='orders')
@@ -50,7 +53,8 @@ class Order(models.Model):
     shipping_cost = models.DecimalField(max_digits=14, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     grand_total = models.DecimalField(max_digits=14, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     payment_method = models.CharField(max_length=20, choices=PaymentMethod.choices, default=PaymentMethod.COD)
-    payment_status = models.CharField(max_length=10, choices=PaymentStatus.choices, default=PaymentStatus.PENDING)
+    payment_status = models.CharField(max_length=10, choices=PaymentStatus.choices, default=PaymentStatus.UNPAID)
+    payment_stock_released = models.BooleanField(default=False)
     order_status = models.CharField(max_length=10, choices=OrderStatus.choices, default=OrderStatus.CONFIRMED)
     delivery_status = models.CharField(max_length=20, choices=DeliveryStatus.choices, default=DeliveryStatus.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -75,6 +79,16 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_number
+
+    @property
+    def latest_payment(self):
+        return self.payments.order_by('-created_at', '-pk').first()
+
+    @property
+    def can_retry_payment(self):
+        return (self.payment_method == self.PaymentMethod.ESEWA
+                and self.payment_status in (self.PaymentStatus.FAILED, self.PaymentStatus.CANCELLED)
+                and self.payment_stock_released)
 
 
 class OrderItem(models.Model):

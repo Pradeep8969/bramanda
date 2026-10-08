@@ -2,7 +2,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
-from django.db.models import Avg, Sum, F
+from django.db.models import Avg, Sum, F, Q
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST, require_safe, require_http_methods
@@ -88,7 +88,7 @@ def reports(request):
         'delivered_count': orders.filter(order_status='DELIVERED').count(),
         'cancelled_count': orders.filter(order_status='CANCELLED').count()}
     return render(request, 'owner/reports.html', {'form': form, 'metrics': metrics,
-        'best_sellers': best_sellers(orders)}, status=200 if form.is_valid() else 400)
+        'best_sellers': best_sellers(orders), 'payment_summary': payment_summary(orders)}, status=200 if form.is_valid() else 400)
 
 
 CATALOG = {'products': (Product, ProductForm), 'categories': (Category, CategoryForm),
@@ -165,7 +165,18 @@ def payments(request):
         if value:
             orders = orders.filter(**{field: value})
         filters.append((field, field.replace('_', ' ').title(), choices, value))
-    return render(request, 'owner/payments.html', {'orders': orders, 'filters': filters})
+    summary = payment_summary(orders)
+    return render(request, 'owner/payments.html', {'orders': orders, 'filters': filters, 'payment_summary': summary})
+
+
+def payment_summary(orders):
+    groups = [('Paid revenue', Q(payment_status='PAID') & ~Q(order_status='CANCELLED')),
+              ('Unpaid COD', Q(payment_method='COD', payment_status='UNPAID')),
+              ('Pending eSewa', Q(payment_method='ESEWA', payment_status='PENDING')),
+              ('Failed/cancelled payments', Q(payment_status__in=['FAILED', 'CANCELLED'])),
+              ('Refunded payments', Q(payment_status='REFUNDED'))]
+    return [(label, orders.filter(scope).aggregate(total=Sum('grand_total'))['total'] or Decimal('0.00'))
+            for label, scope in groups]
 
 
 @owner_required

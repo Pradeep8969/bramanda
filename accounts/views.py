@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 
 from .forms import ProfileForm, RegistrationForm
+from .emails import schedule_welcome_email
 
 
 @require_http_methods(['GET', 'POST'])
@@ -16,6 +17,7 @@ def register(request):
     form = RegistrationForm(request.POST if request.method == 'POST' else None)
     if request.method == 'POST' and form.is_valid():
         user = form.save()
+        schedule_welcome_email(user)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, 'Welcome to BRAMANDA! Your customer account is ready.')
         return redirect('products:shop')

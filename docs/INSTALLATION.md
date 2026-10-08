@@ -62,7 +62,7 @@ After starting the server, sign in to `/admin/`, open the user record, set **rol
 python manage.py runserver
 ```
 
-Visit `http://127.0.0.1:8000/`, `/shop/`, `/owner/`, or `/staff/` as appropriate. Login normally redirects to the storefront; open the relevant dashboard directly after login. The current settings use SQLite, UTC, local static/media directories, DEBUG enabled, and a console mailer configuration. No environment-variable setup is implemented in settings.
+Visit `http://127.0.0.1:8000/`, `/shop/`, `/owner/`, or `/staff/` as appropriate. Login normally redirects to the storefront; open the relevant dashboard directly after login. Settings use SQLite, UTC, local static/media directories, and DEBUG enabled. Email uses environment-configured SMTP; before development signup, set `$env:EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'` or configure real SMTP credentials. See [Email and password reset](EMAIL_AND_PASSWORD_RESET.md).
 
 For Google/Facebook sign in, follow [Social login setup](SOCIAL_LOGIN.md) to create provider projects and enter credentials in Django admin SocialApp records. Sites/SITE_ID and Site associations are not required. Password login works before social credentials are configured.
 

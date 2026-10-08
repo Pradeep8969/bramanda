@@ -1,6 +1,7 @@
 {% extends 'owner/base.html' %}
 {% block staff_content %}
-<header class="owner-page-heading"><p class="eyebrow">Payment records</p><h1 class="page-title">Payment overview</h1><p class="muted">Payment records from orders. Cash on Delivery only.</p></header>
+<header class="owner-page-heading"><p class="eyebrow">Payment records</p><h1 class="page-title">Payment overview</h1><p class="muted">Cash on Delivery and eSewa payments. Paid revenue is separate from amounts awaiting payment.</p></header>
 <form method="get" class="filters owner-compact-filters">{% for field, label, choices, selected in filters %}<div><label for="{{ field }}">{{ label }}</label><select id="{{ field }}" name="{{ field }}"><option value="">All</option>{% for value, text in choices %}<option value="{{ value }}" {% if selected == value %}selected{% endif %}>{{ text }}</option>{% endfor %}</select></div>{% endfor %}<div class="owner-filter-actions"><button class="button" type="submit">Filter</button><a class="btn btn-outline" href="{% url 'owner:payments' %}">Reset</a></div></form>
+{% include 'payments/_summary.html' %}
 {% include 'owner/_orders.html' %}
 {% endblock %}

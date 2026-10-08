@@ -116,10 +116,10 @@ class StaffDashboardTests(TestCase):
         self.assertFalse(self.client.get('/staff/orders/', {'q': 'missing'}).context['orders'])
 
     def test_filters_and_combination(self):
-        for field, value in [('order_status', 'CONFIRMED'), ('delivery_status', 'PENDING'), ('payment_status', 'PENDING')]:
+        for field, value in [('order_status', 'CONFIRMED'), ('delivery_status', 'PENDING'), ('payment_status', 'UNPAID')]:
             self.assertEqual(list(self.client.get('/staff/orders/', {field: value}).context['orders']), [self.order])
             self.assertFalse(self.client.get('/staff/orders/', {field: 'invalid'}).context['orders'])
-        self.assertEqual(self.client.get('/staff/orders/', {'order_status': 'CONFIRMED', 'payment_status': 'PENDING'}).context['orders'].count(), 1)
+        self.assertEqual(self.client.get('/staff/orders/', {'order_status': 'CONFIRMED', 'payment_status': 'UNPAID'}).context['orders'].count(), 1)
 
     def test_newest_first(self):
         Order.objects.filter(pk=self.order.pk).update(created_at=timezone.now()-timedelta(days=1))

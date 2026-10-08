@@ -261,7 +261,7 @@ class OwnerTests(TestCase):
 
     def test_payments_filters(self):
         self.assertContains(self.client.get('/owner/payments/'),self.order.order_number)
-        for query,count in [({'payment_status':'PAID'},2),({'payment_status':'PENDING','payment_method':'COD'},1),({'payment_method':'CARD'},0)]:
+        for query,count in [({'payment_status':'PAID'},2),({'payment_status':'UNPAID','payment_method':'COD'},1),({'payment_method':'CARD'},0)]:
             self.assertEqual(self.client.get('/owner/payments/',query).context['orders'].count(),count)
 
     def test_activity_filtering_readonly(self):

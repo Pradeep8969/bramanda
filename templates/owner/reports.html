@@ -4,4 +4,5 @@
 <form method="get" class="filters owner-compact-filters">{% include 'owner/_fields.html' %}<div class="owner-filter-actions"><button class="button" type="submit">Apply dates</button><a class="btn btn-outline" href="{% url 'owner:reports' %}">Reset</a></div></form>
 <div class="stats-grid owner-metrics"><article class="stat-card owner-money-card"><p>Total revenue</p><strong><span class="owner-currency">Rs.</span> {{ metrics.revenue|floatformat:2 }}</strong></article><article class="stat-card"><p>Number of orders</p><strong>{{ metrics.order_count }}</strong></article><article class="stat-card owner-money-card"><p>Average order value</p><strong><span class="owner-currency">Rs.</span> {{ metrics.average_order_value|floatformat:2 }}</strong></article><article class="stat-card"><p>Delivered orders</p><strong>{{ metrics.delivered_count }}</strong></article><article class="stat-card"><p>Cancelled orders</p><strong>{{ metrics.cancelled_count }}</strong></article></div>
 {% include 'owner/_best.html' %}
+{% include 'payments/_summary.html' %}
 {% endblock %}

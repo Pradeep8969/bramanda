@@ -1,0 +1,94 @@
+/* Checkout-only overrides: other account and management forms are untouched. */
+.checkout-page .checkout-layout {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(24px, 3vw, 40px);
+}
+.checkout-page .checkout-layout > *,
+.checkout-page .checkout-form > * { min-width: 0; }
+.checkout-page .checkout-form { gap: 20px 18px; }
+.checkout-page .checkout-payment-options {
+  grid-column: 1 / -1;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.checkout-page .checkout-payment-options legend {
+  padding: 0;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.checkout-page .checkout-payment-cards { display: grid; gap: 10px; }
+.checkout-page .checkout-payment-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid #ded8cd;
+  border-radius: 2px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.checkout-page .checkout-payment-option:hover { border-color: #8f8578; }
+.checkout-page .checkout-payment-option:has(input:checked),
+.checkout-page .checkout-payment-option.is-selected {
+  border-color: #72685c;
+  background: #f5f2ec;
+}
+.checkout-page .checkout-payment-option:focus-within {
+  outline: 2px solid #202020;
+  outline-offset: 3px;
+}
+.checkout-page .checkout-payment-option input[type="radio"] {
+  appearance: auto;
+  display: block;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  accent-color: #202020;
+}
+.checkout-page .checkout-payment-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.checkout-page .checkout-payment-copy strong {
+  font-size: 15px;
+  font-weight: 500;
+  color: #202020;
+}
+.checkout-page .checkout-payment-copy > span { font-size: 13px; font-weight: 400; color: var(--muted); }
+.checkout-page .checkout-form > .button {
+  width: 100%;
+  min-width: 0;
+  margin-top: 0;
+  white-space: normal;
+}
+.checkout-page .checkout-summary,
+.checkout-page .checkout-line { max-width: 100%; overflow-wrap: anywhere; }
+.checkout-page .checkout-summary .order-totals > div { gap: 12px; flex-wrap: wrap; }
+@media (max-width: 1024px) {
+  .checkout-page .checkout-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .checkout-page .checkout-summary { position: static; width: 100%; }
+}
+@media (max-width: 640px) {
+  .checkout-page .checkout-form { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .checkout-page .delivery-form-panel,
+  .checkout-page .checkout-summary { padding: 20px; }
+  .checkout-page .checkout-payment-option { gap: 12px; padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkout-page .checkout-payment-option { transition: none; }
+}

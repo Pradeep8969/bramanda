@@ -41,10 +41,14 @@ class StorefrontTests(TestCase):
         response = self.detail()
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '10 available')
-        self.assertContains(response, 'Unavailable')
+        self.assertContains(response, 'Beige — Sold Out')
         self.assertNotContains(response, 'PRIVATE-SKU')
         self.assertContains(response, 'class="variant-selector"')
-        self.assertEqual(response.context['variant_groups'], {'Beige': [{'size': 'M', 'stock': 0}], 'Black': [{'size': 'S', 'stock': 10}]})
+        colors = {color['name']: color for color in response.context['color_options']}
+        self.assertFalse(colors['Beige']['available'])
+        self.assertTrue(colors['Black']['available'])
+        self.assertEqual(colors['Black']['sizes'], [{'name': 'S', 'stock': 10, 'variant_id': self.variant.pk}])
+        self.assertNotContains(response, 'availability-details')
 
     def test_inactive_and_missing_detail_return_404(self):
         self.assertEqual(self.detail(self.inactive).status_code, 404)
@@ -91,7 +95,7 @@ class StorefrontTests(TestCase):
         self.assertContains(response, 'Out of Stock')
         self.variant.is_active = False
         self.variant.save()
-        self.assertContains(self.detail(), 'Out of Stock')
+        self.assertContains(self.detail(), 'Sold Out')
         self.assertNotContains(self.detail(), '10 available')
         self.assertEqual(self.names(self.shop(size='S')), [])
 
@@ -104,8 +108,8 @@ class StorefrontTests(TestCase):
         self.assertNotContains(response, '<option value="S"')
         self.assertEqual(self.names(self.shop(color='Black')), [])
         self.assertEqual(self.names(self.shop(size='S')), [])
-        self.assertNotIn('Black', self.detail().context['variant_groups'])
-        self.assertContains(self.detail(), 'Out of Stock')
+        self.assertNotIn('Black', [color['name'] for color in self.detail().context['color_options']])
+        self.assertContains(self.detail(), 'Sold Out')
 
     def test_inactive_category_is_hidden(self):
         self.category.is_active = False

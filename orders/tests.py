@@ -1,4 +1,4 @@
-﻿from decimal import Decimal
+from decimal import Decimal
 from unittest.mock import patch
 
 from django.contrib import admin
@@ -121,7 +121,7 @@ class CheckoutOrderTests(TestCase):
         self.assertEqual(order.shipping_cost, SHIPPING_COST)
         self.assertEqual(order.grand_total, Decimal('1790.00'))
         self.assertEqual(order.payment_method, 'COD')
-        self.assertEqual(order.payment_status, 'PENDING')
+        self.assertEqual(order.payment_status, 'UNPAID')
         self.assertEqual(order.order_status, 'CONFIRMED')
         self.assertEqual(order.delivery_status, 'PENDING')
 
