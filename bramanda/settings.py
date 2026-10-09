@@ -1,4 +1,3 @@
-
 """
 Django settings for BRAMANDA – THE UNDISCOVERED.
 """
@@ -10,81 +9,24 @@ from urllib.parse import urlsplit
 from django.core.exceptions import ImproperlyConfigured
 
 
+from .email_config import load_local_env, smtp_config
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_local_env(BASE_DIR / ".env")
 
 
 # ============================================================
 # SECURITY AND ENVIRONMENT
 # ============================================================
 
-IS_VERCEL = os.environ.get("VERCEL") == "1"
+DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or (
+    "django-insecure-local-development-only-"
+    "bramanda-replace-with-environment-secret"
+)
 
-DEBUG = os.environ.get(
-    "DEBUG",
-    "False" if IS_VERCEL else "True",
-).lower() in ("true", "1", "yes")
-
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-
-if not SECRET_KEY:
-    if IS_VERCEL:
-        raise ImproperlyConfigured(
-            "DJANGO_SECRET_KEY must be configured in Vercel "
-            "environment variables."
-        )
-
-    # Local development only. Never use this fallback in production.
-    SECRET_KEY = (
-        "django-insecure-local-development-only-"
-        "bramanda-replace-with-environment-secret"
-    )
-
-
-# ============================================================
-# ALLOWED HOSTS AND CSRF
-# ============================================================
-
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "192.168.1.72",
-    "bramanda-beta.vercel.app",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://bramanda-beta.vercel.app",
-]
-
-# Support Vercel's generated deployment/preview domain.
-VERCEL_URL = os.environ.get("VERCEL_URL", "").strip()
-
-if VERCEL_URL:
-    if (
-        "/" in VERCEL_URL
-        or ":" in VERCEL_URL
-        or " " in VERCEL_URL
-        or not VERCEL_URL.endswith(".vercel.app")
-    ):
-        raise ImproperlyConfigured(
-            "VERCEL_URL must be a valid Vercel hostname."
-        )
-
-    if VERCEL_URL not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append(VERCEL_URL)
-
-    CSRF_TRUSTED_ORIGINS.append(
-        f"https://{VERCEL_URL}"
-    )
-
-# Vercel terminates HTTPS at its proxy.
-if IS_VERCEL:
-    SECURE_PROXY_SSL_HEADER = (
-        "HTTP_X_FORWARDED_PROTO",
-        "https",
-    )
-
-SESSION_COOKIE_SECURE = IS_VERCEL
-CSRF_COOKIE_SECURE = IS_VERCEL
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.72"]
+CSRF_TRUSTED_ORIGINS = []
 
 
 # ============================================================
@@ -162,15 +104,11 @@ WSGI_APPLICATION = "bramanda.wsgi.application"
 # DATABASE
 # ============================================================
 
-# Local development database.
-# NOTE: SQLite is not suitable as persistent database storage
-# for a live Vercel serverless e-commerce deployment.
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
 }
 
 
@@ -300,62 +238,23 @@ SOCIALACCOUNT_PROVIDERS = {
 
 _config_email_backend = os.environ.get(
     "EMAIL_BACKEND",
-    "django.core.mail.backends.smtp.EmailBackend",
+    "django.core.mail.backends.console.EmailBackend",
 )
 
-_config_email_host = os.environ.get(
-    "EMAIL_HOST",
-    "smtp.gmail.com",
+_smtp_options = (
+    smtp_config(os.environ)
+    if _config_email_backend == "django.core.mail.backends.smtp.EmailBackend"
+    else {}
 )
-
-_config_email_port = int(
-    os.environ.get("EMAIL_PORT", "587")
-)
-
-_config_email_use_tls = os.environ.get(
-    "EMAIL_USE_TLS",
-    "True",
-).lower() in ("true", "1", "yes")
-
-_config_email_use_ssl = os.environ.get(
-    "EMAIL_USE_SSL",
-    "False",
-).lower() in ("true", "1", "yes")
-
-_config_email_host_user = os.environ.get(
-    "EMAIL_HOST_USER",
-    "",
-)
-
-_config_email_host_password = os.environ.get(
-    "EMAIL_HOST_PASSWORD",
-    "",
-)
-
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
-    _config_email_host_user
-    or "BRAMANDA <no-reply@example.com>",
+    _smtp_options.get("username") or "BRAMANDA <no-reply@example.com>",
 )
-
-_config_email_timeout = int(
-    os.environ.get("EMAIL_TIMEOUT", "10")
-)
-
 MAILERS = {
     "default": {
         "BACKEND": _config_email_backend,
-        "OPTIONS": {
-            "host": _config_email_host,
-            "port": _config_email_port,
-            "username": _config_email_host_user,
-            "password": _config_email_host_password,
-            "use_tls": _config_email_use_tls,
-            "use_ssl": _config_email_use_ssl,
-            "timeout": _config_email_timeout,
-        }
-        if _config_email_backend
-        == "django.core.mail.backends.smtp.EmailBackend"
+        "OPTIONS": _smtp_options
+        if _config_email_backend == "django.core.mail.backends.smtp.EmailBackend"
         else {},
     },
 }
@@ -367,11 +266,7 @@ MAILERS = {
 
 PUBLIC_BASE_URL = os.environ.get(
     "PUBLIC_BASE_URL",
-    (
-        "https://bramanda-beta.vercel.app"
-        if IS_VERCEL
-        else "http://127.0.0.1:8000"
-    ),
+    "http://127.0.0.1:8000",
 ).rstrip("/")
 
 _public_origin = urlsplit(PUBLIC_BASE_URL)
@@ -389,8 +284,6 @@ if (
         "PUBLIC_BASE_URL must be an HTTP(S) origin "
         "without a path or credentials."
     )
-
-PASSWORD_RESET_TIMEOUT = 3600
 
 
 # ============================================================

@@ -1,5 +1,11 @@
 # Testing
 
+Local cleanup verification (2026-10-09): all 300 tests passed. Django system
+checks passed, migration dry-run detected no changes, `pip check` found no broken
+requirements, and `git diff --check` passed. A temporary local development server
+returned HTTP 200 for `/`, `/shop/`, `/login/`, and `/register/` and was stopped
+after verification. No real email or external OAuth/payment requests were sent.
+
 ## Strategy
 
 The project uses Django's built-in test runner and `django.test.TestCase`. Test cases create controlled users, catalog entries, carts, and orders in an isolated test database. Django's test client exercises HTTP pages, redirects, forms, authentication, and authorization. Direct model/service tests verify constraints, totals, inventory history, and rollback behavior. Selected tests use `Client(enforce_csrf_checks=True)` because CSRF enforcement is otherwise disabled by the standard test client.
@@ -12,7 +18,7 @@ Mocked write failures exercise transaction rollback. Sequential final-stock and 
 | --- | --- |
 | `accounts/tests.py`, `accounts/test_customer_auth.py` | Custom user defaults and roles, homepage, registration, hashed passwords, fixed CUSTOMER role, password validation, duplicate username, login/safe next, inactive login denial, POST logout, own profile editing, restricted fields, CSRF |
 | `accounts/test_social_auth.py` | Google/Facebook POST initiation and mocked callbacks, CSRF/state validation, auto-signup and returning login, CUSTOMER/privilege enforcement, no-credential pages, SocialApp/admin configuration without Sites, duplicate email rejection, explicit account connection, redirects, preserved password login/registration and management roles |
-| `accounts/test_email_password_reset.py` | Required/normalized/case-insensitive unique registration email, text/HTML welcome messages, password exclusion, post-commit rollback and SMTP failure behavior, both social signup/returning flows, unchanged roles, generic reset responses, valid/invalid/expired/replayed tokens, social first-password creation, retained SocialAccounts and Google/Facebook/password login, active CUSTOMER eligibility, email-less exclusion, identical ineligible responses, login after reset, CSRF and trusted link origin |
+| `accounts/test_welcome_email.py`, `accounts/test_email_config.py`, `accounts/test_auth_routes.py` | Registration email validation, branded welcome messages, post-commit behavior, sanitized failure handling, mocked social welcome delivery, SMTP configuration, local defaults, unavailable recovery routes, and preserved login/signup/profile/social/password-change routes |
 | `products/tests.py`, `products/test_storefront.py` | Model/form validation, slugs/collisions, unique SKU/variant combination, nonnegative price/stock, reusable seed command, active catalog visibility, search, combined filters, sorting, galleries, featured products, navigation, bounded prefetch query count |
 | `cart/tests.py` | Login, account isolation, add/update/remove, quantity/stock limits, inactive variants, computed Decimal totals, untrusted prices, stock warnings, no stock change during cart operations, constraints, POST/CSRF requirements |
 | `orders/tests.py` | Checkout authentication/prefill, required shipping fields and payment-method validation, server-controlled totals/status/customer, item snapshots, unique order numbers, stock deductions/history/cart clearing, current prices, insufficient-stock and injected-failure rollback, duplicate submission, SQLite conflict handling, own order access, tracking and history preservation |

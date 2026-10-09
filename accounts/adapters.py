@@ -8,7 +8,7 @@ from .models import User
 
 
 class CustomerAccountAdapter(DefaultAccountAdapter):
-    """Keep allauth redirects out of management areas; password views are unchanged."""
+    """Keep allauth redirects out of management areas."""
 
     def is_safe_url(self, url):
         if not super().is_safe_url(url):

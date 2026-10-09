@@ -1,5 +1,4 @@
 import logging
-from smtplib import SMTPException
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -8,6 +7,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from .models import User
+from .mail_diagnostics import send_safely
 
 logger = logging.getLogger(__name__)
 WELCOME_SUBJECT = 'Welcome to BRAMANDA – THE UNDISCOVERED'
@@ -23,7 +23,6 @@ def schedule_welcome_email(user):
         'shop_url': settings.PUBLIC_BASE_URL + reverse('products:shop'),
     }
     recipient = user.email
-    user_id = user.pk
 
     def send():
         message = EmailMultiAlternatives(
@@ -31,10 +30,6 @@ def schedule_welcome_email(user):
             settings.DEFAULT_FROM_EMAIL, [recipient],
         )
         message.attach_alternative(render_to_string('accounts/email/welcome.html', context), 'text/html')
-        try:
-            message.send()
-        except (SMTPException, OSError):
-            # Signup remains successful. No credentials, password, or recipient in logs.
-            logger.error('Welcome email delivery failed for user id %s.', user_id)
+        send_safely(message, logger, 'Welcome')
 
     transaction.on_commit(send)
