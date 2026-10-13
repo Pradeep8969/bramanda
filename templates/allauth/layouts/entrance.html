@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{% block head_title %}{% endblock %} | BRAMANDA{% endblock %}
+{% block content_shell %}
+  <section class="container section account-page allauth-entrance">
+    <div class="account-card login-card">
+      {% block content %}{% endblock %}
+    </div>
+  </section>
+{% endblock %}

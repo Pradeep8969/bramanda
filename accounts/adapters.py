@@ -1,24 +1,28 @@
-from urllib.parse import unquote, urlsplit
-
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from django.urls import Resolver404, resolve
 
 from .models import User
+from .redirects import login_destination, role_home, safe_login_next
 
 
 class CustomerAccountAdapter(DefaultAccountAdapter):
-    """Keep allauth redirects out of management areas."""
+    """Use the same role-aware navigation as password login."""
 
     def is_safe_url(self, url):
-        if not super().is_safe_url(url):
-            return False
-        path = unquote(urlsplit(url).path)
-        try:
-            match = resolve(path)
-        except Resolver404:
-            return False
-        return match.namespace not in {'owner', 'dashboard', 'admin'}
+        return safe_login_next(self.request, url, self.request.user)
+
+    def get_login_redirect_url(self, request):
+        return role_home(request.user)
+
+    def post_login(self, request, user, *, redirect_url=None, **kwargs):
+        # Revalidate OAuth state after login, when the actual role is known.
+        destination = redirect_url or request.POST.get("next", request.GET.get("next"))
+        return super().post_login(
+            request,
+            user,
+            redirect_url=login_destination(request, destination),
+            **kwargs,
+        )
 
 
 class CustomerSocialAccountAdapter(DefaultSocialAccountAdapter):

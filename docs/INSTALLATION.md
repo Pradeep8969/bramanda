@@ -64,7 +64,7 @@ python manage.py runserver
 
 Visit `http://127.0.0.1:8000/`, `/shop/`, `/owner/`, or `/staff/` as appropriate. Login normally redirects to the storefront; open the relevant dashboard directly after login. Settings use SQLite, UTC, local static/media directories, and DEBUG enabled. Email defaults to the console backend, so signup needs no SMTP credentials. Optional Git-ignored `.env` values override local settings; existing process variables take precedence. See [Customer email](EMAIL.md).
 
-For Google/Facebook sign in, follow [Social login setup](SOCIAL_LOGIN.md) to create provider projects and enter credentials in Django admin SocialApp records. Sites/SITE_ID and Site associations are not required. Password login works before social credentials are configured.
+For Google sign in, follow [Social login setup](SOCIAL_LOGIN.md) to create provider projects and enter credentials in Django admin SocialApp records. Sites/SITE_ID and Site associations are not required. Password login works before social credentials are configured.
 
 ## 8. Verify the checkout
 

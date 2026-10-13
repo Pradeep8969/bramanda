@@ -239,5 +239,5 @@ Also configure HTTPS/trusted callback origins, production Django security,
 scheduled reconciliation with monitoring, callback/request abuse controls,
 provider-confirmed settlement/refund workflows, staff reconciliation for
 late/duplicate payments, database concurrency/load validation, backups, and
-receipt/accounting requirements. Google/Facebook/password authentication and
+receipt/accounting requirements. Google/password authentication and
 existing role permissions are unchanged by this integration.

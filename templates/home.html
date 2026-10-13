@@ -1,90 +1,93 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
-
+{% block body_class %}homepage{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}?v=luxury-split-3">
+{% endblock %}
 {% block content %}
-
-<section class="hero">
-    <div class="hero-content">
-        <p class="eyebrow">BRAMANDA / THE UNDISCOVERED</p>
-
-        <h1>
-            Define Your<br>
-            Own Direction.
-        </h1>
-
-        <p class="hero-copy">
-            Premium essentials created for those who choose their own path.
+  <section class="home-hero" aria-labelledby="home-headline">
+    {% if campaign_image %}
+      {# djlint:off #}<img class="home-hero-photo campaign-photo" src="{% static 'images/home/hero-editorial.webp' %}" alt="Model wearing a BRAMANDA graphic T-shirt overlooking the mountains at sunset" fetchpriority="high" width="1672" height="941">{# djlint:on #}
+    {% elif editorial_product %}
+      <img class="home-hero-photo"
+           src="{{ editorial_product.image.url }}"
+           alt="{{ editorial_product.name }} — collection photograph"
+           fetchpriority="high">
+    {% endif %}
+    <div class="home-hero-shade" aria-hidden="true"></div>
+    <div class="home-hero-content">
+      <p class="eyebrow">BRAMANDA / THE UNDISCOVERED</p>
+      <h1 id="home-headline">
+        DEFINE YOUR<br>OWN DIRECTION.
+      </h1>
+      <p class="home-hero-copy">
+        Premium essentials for your own path.<br>Independent spirit. Everyday expression.
+      </p>
+      <div class="home-hero-actions"><a class="btn btn-primary" aria-label="Shop Now" href="{% url 'products:shop' %}">SHOP THE COLLECTION &rarr;</a><a class="btn btn-outline" href="#about">EXPLORE BRAMANDA</a></div>
+      <p class="home-hero-footnote"><span aria-hidden="true"></span>BRAMANDA — THE UNDISCOVERED</p>
+    </div>
+  </section>
+  <section class="home-values" aria-label="BRAMANDA perspective">
+    <div>
+      <span aria-hidden="true">01</span>
+      <h2>THOUGHTFUL DESIGN</h2>
+      <p>A considered point of view.</p>
+    </div>
+    <div>
+      <span aria-hidden="true">02</span>
+      <h2>EVERYDAY COMFORT</h2>
+      <p>Your everyday style.</p>
+    </div>
+    <div>
+      <span aria-hidden="true">03</span>
+      <h2>DISTINCTIVE STYLE</h2>
+      <p>Your own expression.</p>
+    </div>
+    <div>
+      <span aria-hidden="true">04</span>
+      <h2>THE UNDISCOVERED</h2>
+      <p>Choose your own direction.</p>
+    </div>
+  </section>
+  <section class="home-edit" aria-labelledby="featured-heading">
+    <div class="home-section-heading"><div><p class="eyebrow">The edit</p><h2 id="featured-heading">Featured essentials</h2><p class="muted">Discover pieces made to define your everyday style.</p></div><a class="text-link" href="{% url 'products:shop' %}">Explore the shop &rarr;</a></div>
+    <div class="home-edit-layout" data-product-count="{{ featured_products|length }}">
+      <div class="home-products" data-product-count="{{ featured_products|length }}">
+        {% for product in featured_products %}{% include "products/_card.html" %}{% empty %}<div class="home-empty"><p class="eyebrow">The next discovery</p><h3>Our next collection is taking shape.</h3><p class="muted">Check back soon.</p><a class="text-link" href="{% url 'products:shop' %}">Explore the shop &rarr;</a></div>{% endfor %}
+      </div>
+    </div>
+  </section>
+  <section class="home-stories" id="about" aria-label="Our perspective">
+    <article class="home-story home-perspective">
+      <div class="home-perspective-copy"><p class="eyebrow">Our perspective</p><h2>A New<br>Perspective</h2><p>For the paths still undiscovered.<br>Move through the world on your own terms.</p><a class="text-link" href="{% url 'products:shop' %}">FIND YOUR DIRECTION &rarr;</a></div>
+      <div class="home-perspective-logo">
+        <img src="{% static 'images/logo-beige-panel.png' %}"
+             alt="BRAMANDA &mdash; The Undiscovered"
+             width="1254"
+             height="1254"
+             loading="lazy"
+             decoding="async">
+      </div>
+    </article>
+    <article class="home-story home-details">
+      <div class="home-details-media" aria-hidden="true">
+        <img class="home-details-artwork"
+             src="{% static 'images/home/details-spiked-figure.webp' %}"
+             alt=""
+             width="503"
+             height="900"
+             loading="lazy"
+             decoding="async">
+      </div>
+      <div class="home-details-copy">
+        <p class="eyebrow">Every detail, your expression</p>
+        <h2>
+          The Details<br>Matter
+        </h2>
+        <p>
+          A distinctive point of view.<br>Explore the pieces behind the statement.
         </p>
-
-        <div class="hero-actions">
-            <a
-                class="btn btn-primary"
-                aria-label="Shop Now"
-                href="{% url 'products:shop' %}"
-            >
-                SHOP COLLECTION &rarr;
-            </a>
-
-            <a
-                class="btn btn-outline"
-                href="#about"
-            >
-                EXPLORE BRAMANDA
-            </a>
-        </div>
-
-        <p class="hero-caption">
-            Independent spirit. Everyday expression.
-        </p>
-    </div>
-
-    <div class="hero-visual hero-photo">
-        <img
-            class="hero-image"
-            src="{% static 'images/logo.jpeg' %}"
-            alt="BRAMANDA collection"
-            fetchpriority="high"
-        >
-    </div>
-</section>
-
-
-<section class="container section">
-    <div class="section-heading">
-        <div>
-            <p class="eyebrow">The edit</p>
-            <h2>Featured essentials</h2>
-        </div>
-
-        <a href="{% url 'products:shop' %}">
-            Explore the shop &rarr;
-        </a>
-    </div>
-
-    <div class="product-grid">
-        {% for product in featured_products %}
-            {% include 'products/_card.html' %}
-        {% empty %}
-            <p class="empty-state">
-                Our next collection is taking shape. Check back soon.
-            </p>
-        {% endfor %}
-    </div>
-</section>
-
-
-<section class="brand-statement" id="about">
-    <p class="eyebrow">Our perspective</p>
-
-    <h2>
-        For the paths<br>
-        still undiscovered.
-    </h2>
-
-    <p>
-        Quiet confidence. Everyday expression.
-        BRAMANDA is for those who move through the world on their own terms.
-    </p>
-</section>
-
+      </div>
+    </article>
+  </section>
 {% endblock %}

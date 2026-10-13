@@ -8,11 +8,20 @@ from urllib.parse import urlsplit
 
 from django.core.exceptions import ImproperlyConfigured
 
-
 from .email_config import load_local_env, smtp_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_local_env(BASE_DIR / ".env")
+
+# Backend-only order mail; independent of Django welcome/allauth mailers.
+EMAILJS_SERVICE_ID = os.environ.get("EMAILJS_SERVICE_ID", "")
+EMAILJS_ORDER_TEMPLATE_ID = os.environ.get("EMAILJS_ORDER_TEMPLATE_ID", "")
+EMAILJS_PUBLIC_KEY = os.environ.get("EMAILJS_PUBLIC_KEY", "")
+EMAILJS_PRIVATE_KEY = os.environ.get("EMAILJS_PRIVATE_KEY", "")
+# Map actual EmailJS variable names to the canonical names in orders/emails.py.
+EMAILJS_TEMPLATE_VARIABLES = {}
+# Dedicated private key: do not sign public invoice links with the development SECRET_KEY.
+INVOICE_SIGNING_KEY = os.environ.get("INVOICE_SIGNING_KEY", "")
 
 
 # ============================================================
@@ -21,8 +30,7 @@ load_local_env(BASE_DIR / ".env")
 
 DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or (
-    "django-insecure-local-development-only-"
-    "bramanda-replace-with-environment-secret"
+    "django-insecure-local-development-only-" "bramanda-replace-with-environment-secret"
 )
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.72"]
@@ -40,13 +48,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.facebook",
-
     "accounts",
     "products",
     "cart",
@@ -124,22 +129,13 @@ AUTH_PASSWORD_VALIDATORS = [
         ),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "MinimumLengthValidator"
-        ),
+        "NAME": ("django.contrib.auth.password_validation." "MinimumLengthValidator"),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "CommonPasswordValidator"
-        ),
+        "NAME": ("django.contrib.auth.password_validation." "CommonPasswordValidator"),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "NumericPasswordValidator"
-        ),
+        "NAME": ("django.contrib.auth.password_validation." "NumericPasswordValidator"),
     },
 ]
 
@@ -174,7 +170,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "accounts:login"
-LOGIN_REDIRECT_URL = "products:shop"
+LOGIN_REDIRECT_URL = "home"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -199,9 +195,7 @@ ACCOUNT_SIGNUP_FIELDS = [
 
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 
-SOCIALACCOUNT_ADAPTER = (
-    "accounts.adapters.CustomerSocialAccountAdapter"
-)
+SOCIALACCOUNT_ADAPTER = "accounts.adapters.CustomerSocialAccountAdapter"
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = False
@@ -209,7 +203,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = False
 
-# Google/Facebook credentials remain in SocialApp records.
+# Google credentials remain in SocialApp records.
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [
@@ -221,13 +215,6 @@ SOCIALACCOUNT_PROVIDERS = {
             "prompt": "select_account",
         },
         "OAUTH_PKCE_ENABLED": True,
-    },
-    "facebook": {
-        "METHOD": "oauth2",
-        "SCOPE": [
-            "email",
-            "public_profile",
-        ],
     },
 }
 
@@ -253,9 +240,11 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 MAILERS = {
     "default": {
         "BACKEND": _config_email_backend,
-        "OPTIONS": _smtp_options
-        if _config_email_backend == "django.core.mail.backends.smtp.EmailBackend"
-        else {},
+        "OPTIONS": (
+            _smtp_options
+            if _config_email_backend == "django.core.mail.backends.smtp.EmailBackend"
+            else {}
+        ),
     },
 }
 
@@ -271,6 +260,11 @@ PUBLIC_BASE_URL = os.environ.get(
 
 _public_origin = urlsplit(PUBLIC_BASE_URL)
 
+BRAMANDA_PUBLIC_BASE_URL = os.environ.get(
+    "BRAMANDA_PUBLIC_BASE_URL",
+    PUBLIC_BASE_URL,
+).rstrip("/")
+
 if (
     _public_origin.scheme not in ("http", "https")
     or not _public_origin.netloc
@@ -281,8 +275,7 @@ if (
     or _public_origin.fragment
 ):
     raise ImproperlyConfigured(
-        "PUBLIC_BASE_URL must be an HTTP(S) origin "
-        "without a path or credentials."
+        "PUBLIC_BASE_URL must be an HTTP(S) origin " "without a path or credentials."
     )
 
 
@@ -314,18 +307,21 @@ ESEWA_PAYMENT_URL = os.environ.get(
 
 ESEWA_STATUS_URL = os.environ.get(
     "ESEWA_STATUS_URL",
-    "https://uat.esewa.com.np/api/epay/transaction/status/",
+    # Current ePay documentation: https://developer.esewa.com.np/pages/Epay
+    # The older Epay-V2 page's uat.esewa.com.np hostname no longer resolves here.
+    "https://rc.esewa.com.np/api/epay/transaction/status/",
 )
 
 if (
     ESEWA_ENV not in ("test", "uat")
     or ESEWA_PRODUCT_CODE != "EPAYTEST"
-    or ESEWA_PAYMENT_URL
-    != "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+    or ESEWA_PAYMENT_URL != "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
     or ESEWA_STATUS_URL
-    != "https://uat.esewa.com.np/api/epay/transaction/status/"
+    not in (
+        "https://rc.esewa.com.np/api/epay/transaction/status/",
+        "https://uat.esewa.com.np/api/epay/transaction/status/",
+    )
 ):
     raise ImproperlyConfigured(
-        "Only official eSewa ePay V2 TEST/UAT "
-        "configuration is supported."
+        "Only official eSewa ePay V2 TEST/UAT " "configuration is supported."
     )

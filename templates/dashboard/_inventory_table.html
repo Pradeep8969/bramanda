@@ -1,0 +1,57 @@
+<p class="staff-table-hint">Scroll the table to see all variant details.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Inventory table">
+  <table class="variant-table owner-table staff-inventory-table">
+    <caption class="visually-hidden">Variants and current stock levels</caption>
+    <thead>
+      <tr>
+        <th scope="col">Product</th>
+        <th scope="col">SKU</th>
+        <th scope="col">Color</th>
+        <th scope="col">Size</th>
+        <th scope="col">Current stock</th>
+        <th scope="col">Stock status</th>
+        <th scope="col">Save</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for variant in variants %}
+        <tr data-stock-row>
+          <th scope="row">{{ variant.product.name }}</th>
+          <td class="sku-cell">{{ variant.sku }}</td>
+          <td>{{ variant.color.name }}</td>
+          <td>{{ variant.size.name }}</td>
+          <td>
+            <input form="stock-{{ variant.pk }}"
+                   id="quantity-{{ variant.pk }}"
+                   class="inventory-quantity"
+                   type="number"
+                   name="quantity"
+                   min="0"
+                   max="2147483647"
+                   step="1"
+                   required
+                   value="{{ variant.stock_quantity }}"
+                   aria-label="Total stock for {{ variant.sku }}"
+                   aria-describedby="stock-message-{{ variant.pk }}">
+          </td>
+          <td><span data-stock-status
+      class="status-badge status-{{ variant.stock_level|slugify }}">{{ variant.stock_level }}</span></td>
+          <td>
+            <form id="stock-{{ variant.pk }}"
+                  class="inventory-row-form"
+                  method="post"
+                  action="{% if request.resolver_match.namespace == 'owner' %}{% url 'owner:stock_update' %}{% else %}{% url 'dashboard:stock_update' %}{% endif %}">
+              {% csrf_token %}
+              <input type="hidden" name="variant" value="{{ variant.pk }}"><input type="hidden" name="expected_stock" value="{{ variant.stock_quantity }}"><input type="hidden" name="expected_updated_at" value="{{ variant.updated_at.isoformat }}">
+              <button class="button" type="submit" disabled>Save</button>
+              <span id="stock-message-{{ variant.pk }}"
+                    class="inventory-row-message"
+                    role="status"
+                    aria-live="polite"></span>
+            </form>
+          </td>
+        </tr>
+      {% empty %}<tr><td colspan="7" class="table-empty">No variants found.</td></tr>{% endfor %}</tbody></table></div>
+<noscript>
+  <p>Enable JavaScript to save stock directly in the table.</p>
+</noscript>

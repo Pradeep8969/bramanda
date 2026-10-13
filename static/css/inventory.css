@@ -1,0 +1,45 @@
+.owner-shell .staff-inventory-table input.inventory-quantity,
+.staff-shell .staff-inventory-table input.inventory-quantity {
+  width: 6.5rem;
+  min-height: 44px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #cbd5d1;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+.inventory-quantity[aria-invalid='true'] {
+  border-color: #a52a2a;
+}
+.inventory-row-form {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  min-width: 10rem;
+}
+.inventory-row-form button {
+  min-height: 2.5rem;
+}
+.inventory-row-form button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.inventory-row-message {
+  font-size: var(--type-label);
+  color: #23613e;
+  max-width: 16rem;
+}
+.inventory-row-message[data-error='true'] {
+  color: #a52a2a;
+}
+
+.owner-shell .staff-inventory-table :is(th, td),
+.staff-shell .staff-inventory-table :is(th, td) {
+  padding: 12px 16px;
+}
+
+/* Color and size labels stay readable inside the scrollable variant table. */
+.staff-inventory-table td:nth-child(3),
+.staff-inventory-table td:nth-child(4) {
+  white-space: nowrap;
+}

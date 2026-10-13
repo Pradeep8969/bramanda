@@ -13,3 +13,40 @@ staticfiles/
 *.pyc
 *.sqlite3
 *.sqlite3-*
+
+# Development caches and dependencies.
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+node_modules/
+
+# Disposable diagnostic output; use the OS temporary directory instead.
+test-results-temp.txt
+debug-output.txt
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Local backups (never delete these merely because Git ignores them).
+/db-before-*
+/db-backup-*
+
+# Known local audit outputs; keep audit scripts and documentation visible.
+/artifacts/**/*.png
+/artifacts/**/metrics.json
+/artifacts/**/manifest.json
+/artifacts/formatting-audit/before/
+/artifacts/formatting-audit/diffs/
+/artifacts/formatting-audit/summary.json
+/artifacts/formatting-audit/asset-summary.json
+/artifacts/formatting-audit/files.json
+/artifacts/formatting-audit/git-status-before.txt

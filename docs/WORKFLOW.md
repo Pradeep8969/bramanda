@@ -37,7 +37,7 @@ These areas can be visited independently; the diagram is a typical working seque
 
 Staff inventory lists active variants with product/SKU search and stock-level labels. An adjustment requires a nonzero signed integer and a note, cannot make stock negative, and creates both InventoryTransaction and StaffActivity within an atomic operation. Customer information is read-only and includes order counts. Staff cannot manage catalog or staff accounts through the owner routes.
 
-Order cancellation through the status form does not automatically restore stock. Return stock must be handled through an explicit inventory operation; the service supports RETURN, while dashboard adjustments use ADJUSTMENT. Order, delivery, and payment status fields are separate; updating one does not automatically synchronize the others.
+Order cancellation is unavailable through customer, owner and staff interfaces. Historical cancelled orders and audit records are preserved; see ORDER_CANCELLATION.md. Inventory services retain RETURN for verified payment failure handling, while dashboard adjustments use ADJUSTMENT. Order, delivery, and payment status fields are separate; updating one does not automatically synchronize the others.
 
 ## Owner
 

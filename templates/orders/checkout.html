@@ -1,31 +1,48 @@
-{% extends 'base.html' %}{% load static %}
+{% extends "base.html" %}
+{% load static %}
 {% block title %}Checkout | BRAMANDA{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
-<script src="{% static 'js/checkout.js' %}" defer></script>
-<section class="container section customer-page checkout-page"><p class="eyebrow">One step closer</p><h1 class="page-title">Checkout</h1>
-<div class="checkout-layout">
-<div class="delivery-form-panel"><h2 class="availability-title">Delivery details</h2><p class="muted">Your details are saved with this order. Your profile will stay unchanged.</p>
-<form method="post" class="account-form checkout-form">{% csrf_token %}
-{% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-{% for field in form %}{% if field.name != 'payment_method' %}{% include 'accounts/_account_field.html' %}{% endif %}{% endfor %}
-<fieldset class="checkout-payment-options"{% if form.payment_method.errors %} aria-describedby="checkout-payment-error"{% endif %}>
-<legend>Payment method</legend>
-<div class="checkout-payment-cards">
-{% for option in form.payment_method %}
-<label class="checkout-payment-option" for="{{ option.id_for_label }}">
-{{ option.tag }}
-<span class="checkout-payment-copy"><strong>{{ option.choice_label }}</strong><span>{% if option.data.value == 'COD' %}Pay when your order is delivered.{% elif option.data.value == 'ESEWA' %}Pay securely with eSewa.{% endif %}</span></span>
-</label>
-{% endfor %}
-</div>
-{% if form.payment_method.errors %}<div id="checkout-payment-error" class="form-errors form-error" role="alert">{{ form.payment_method.errors }}</div>{% endif %}
-</fieldset>
-<button class="button" type="submit" data-checkout-submit>{% if form.payment_method.value == 'ESEWA' %}Continue to eSewa{% else %}Place Order{% endif %} &rarr;</button></form>
-<a class="text-link checkout-back" href="{% url 'cart:detail' %}">&larr; Back to cart</a></div>
-<aside class="cart-summary checkout-summary"><h2>Your order</h2>
-{% for item in items %}<div class="checkout-line"><strong>{{ item.variant.product.name }}</strong><p class="muted">{{ item.variant.color.name }} / {{ item.variant.size.name }}</p><p>Rs. {{ item.unit_price|floatformat:2 }} × {{ item.quantity }} <strong>Rs. {{ item.subtotal|floatformat:2 }}</strong></p></div>{% endfor %}
-{% include 'orders/_totals.html' %}
-<p class="muted">Delivery fee: fixed Rs. {{ shipping_cost|floatformat:2 }}. Stock and prices are checked again when you place your order.</p>
-</aside></div></section>{% endblock %}
-
+  <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+  <script src="{% static 'js/checkout.js' %}" defer></script>
+  <section class="container section customer-page checkout-page">
+    <p class="eyebrow">One step closer</p>
+    <h1 class="page-title">Checkout</h1>
+    <div class="checkout-layout">
+      <div class="delivery-form-panel">
+        <h2 class="availability-title">Delivery details</h2>
+        <p class="muted">Your details are saved with this order. Your profile will stay unchanged.</p>
+        <form method="post" class="account-form checkout-form">
+          {% csrf_token %}
+          {% if form.non_field_errors %}<div class="form-errors form-error"
+     role="alert">{{ form.non_field_errors }}</div>{% endif %}
+          {% for field in form %}
+            {% if field.name != "payment_method" %}
+              {% include "accounts/_account_field.html" %}
+            {% endif %}
+          {% endfor %}
+          <fieldset class="checkout-payment-options"
+                    {% if form.payment_method.errors %} aria-describedby="checkout-payment-error"{% endif %}>
+            <legend>Payment method</legend>
+            <div class="checkout-payment-cards">
+              {% for option in form.payment_method %}
+                <label class="checkout-payment-option" for="{{ option.id_for_label }}">
+                  {{ option.tag }}
+                  <span class="checkout-payment-copy"><strong>{{ option.choice_label }}</strong><span>{% if option.data.value == "COD" %}Pay when your order is delivered.{% elif option.data.value == "ESEWA" %}Pay securely with eSewa.{% endif %}</span></span>
+                </label>
+              {% endfor %}
+            </div>
+            {% if form.payment_method.errors %}<div id="checkout-payment-error"
+     class="form-errors form-error"
+     role="alert">{{ form.payment_method.errors }}</div>{% endif %}
+          </fieldset>
+          <button class="button" type="submit" data-checkout-submit>{% if form.payment_method.value == "ESEWA" %}Continue to eSewa{% else %}Place Order{% endif %} &rarr;</button></form>
+        <a class="text-link checkout-back" href="{% url 'cart:detail' %}">&larr; Back to cart</a></div>
+      <aside class="cart-summary checkout-summary">
+        <h2>Your order</h2>
+        {% for item in items %}<div class="checkout-line"><strong>{{ item.variant.product.name }}</strong><p class="muted">{{ item.variant.color.name }} / {{ item.variant.size.name }}</p><p>Rs. {{ item.unit_price|floatformat:2 }} × {{ item.quantity }} <strong>Rs. {{ item.subtotal|floatformat:2 }}</strong></p></div>{% endfor %}
+        {% include "orders/_totals.html" %}
+        <p class="muted">Delivery fee: fixed Rs. {{ shipping_cost|floatformat:2 }}. Stock and prices are checked again when you place your order.</p>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

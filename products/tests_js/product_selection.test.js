@@ -12,7 +12,10 @@ const variants = [
 
 test('zero-stock and restricted colors cannot be selected', () => {
   const selection = createVariantSelection(variants);
-  assert.deepEqual(selection.colors().map(option => option.available), [true, true, false, false]);
+  assert.deepEqual(
+    selection.colors().map((option) => option.available),
+    [true, true, false, false],
+  );
   assert.equal(selection.chooseColor('Red'), false);
   assert.equal(selection.chooseColor('White'), false);
   assert.equal(selection.chooseSize('S'), false);
@@ -23,7 +26,10 @@ test('sizes use only selected color stock and changing color clears unavailable 
   const selection = createVariantSelection(variants);
   assert.deepEqual(selection.sizes(), []);
   selection.chooseColor('Black');
-  assert.deepEqual(selection.sizes(), [{ value: 'S', available: true }, { value: 'M', available: false }]);
+  assert.deepEqual(selection.sizes(), [
+    { value: 'S', available: true },
+    { value: 'M', available: false },
+  ]);
   assert.equal(selection.chooseSize('M'), false);
   selection.chooseSize('S');
   assert.equal(selection.current().variant.id, '1');
@@ -36,7 +42,10 @@ test('sizes use only selected color stock and changing color clears unavailable 
 });
 
 test('changing color retains a size only when the new variant is in stock', () => {
-  const selection = createVariantSelection([...variants, { id: '7', color: 'Blue', size: 'S', stock: 1, available: true }]);
+  const selection = createVariantSelection([
+    ...variants,
+    { id: '7', color: 'Blue', size: 'S', stock: 1, available: true },
+  ]);
   selection.selectVariant('1');
   selection.chooseColor('Blue');
   assert.equal(selection.current().size, 'S');

@@ -1,0 +1,27 @@
+[tool.black]
+line-length = 88
+extend-exclude = '/(venv|\.venv|\.git|node_modules|migrations|artifacts|media|staticfiles)/'
+force-exclude = '/(venv|\.venv|\.git|node_modules|migrations|artifacts|media|staticfiles)/'
+
+[tool.ruff]
+line-length = 88
+extend-exclude = ["venv", ".venv", ".git", "node_modules", "migrations", "artifacts", "media", "staticfiles"]
+force-exclude = true
+
+[tool.ruff.lint]
+select = ["I", "F401", "F811"]
+
+[tool.djlint]
+profile = "django"
+indent = 2
+max_line_length = 120
+max_attribute_length = 300
+keep_br_inline = true
+preserve_leading_space = false
+preserve_blank_lines = true
+format_css = false
+format_js = false
+no_entity_formatting = true
+no_function_formatting = true
+no_set_formatting = true
+exclude = "venv,.venv,.git,node_modules,migrations,artifacts,media,staticfiles"

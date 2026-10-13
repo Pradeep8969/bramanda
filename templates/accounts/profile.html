@@ -1,19 +1,72 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block title %}Profile | BRAMANDA{% endblock %}
 {% block content %}
-<section class="container section account-page profile-page">
-  <div class="account-layout">
-    <header class="account-introduction"><p class="eyebrow">Your BRAMANDA account</p><h1 class="page-title">My profile</h1><p class="muted">Your details, in one place. Keep your contact information up to date for your next discovery.</p><a class="btn btn-outline" href="{% url 'orders:list' %}">My Orders &rarr;</a></header>
-    <div class="account-card"><h2 class="account-card-title">Account details</h2>
-      <div class="account-readonly"><dl><div><dt>Username</dt><dd>{{ user.username }}</dd></div></dl><p class="muted">Your username is read-only.</p></div>
-      <p class="muted account-edit-note">You can edit your personal and contact details below.</p>
-      <form method="post" class="account-form customer-account-form profile-form">
-        {% csrf_token %}
-        {% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-        <div class="account-field-grid">{% for field in form %}{% include 'accounts/_account_field.html' %}{% endfor %}</div>
-        <button class="button" type="submit">Save Changes &rarr;</button>
-      </form>
-    </div>
+  <section class="container section account-page profile-page">
+    <div class="account-layout">
+      <header class="account-introduction"><p class="eyebrow">Your BRAMANDA account</p><h1 class="page-title">My profile</h1><p class="muted">Your details, in one place. Keep your contact information up to date for your next discovery.</p><a class="btn btn-outline" href="{% url 'orders:list' %}">My Orders &rarr;</a>
+        <section class="profile-completion" aria-labelledby="profile-completion-label">
+          <div class="profile-completion-heading">
+            <h2 id="profile-completion-label">Profile completion</h2>
+            <span>{{ profile_completion }}%</span>
+          </div>
+          <progress value="{{ profile_completion }}"
+                    max="100"
+                    aria-labelledby="profile-completion-label"
+                    aria-describedby="profile-completion-hint">{{ profile_completion }}%</progress>
+          <p class="muted" id="profile-completion-hint">{{ completion_hint }}</p>
+        </section>
+      </header>
+      <div class="profile-details-column">
+        <div class="account-card">
+          <h2 class="account-card-title">Account details</h2>
+          <div class="profile-identity">
+            <span class="profile-avatar" aria-hidden="true">{{ profile_initials }}</span>
+            <div class="profile-identity-name"><strong>{{ profile_name }}</strong><span class="muted">BRAMANDA member</span></div>
+            {% if google_linked %}<span class="profile-badge profile-google"><span aria-hidden="true">&#10003;</span> Google linked</span>{% endif %}
+          </div>
+          <div class="account-readonly">
+            <dl>
+              <div>
+                <dt>Username</dt>
+                <dd>
+                  {{ user.username }}
+                </dd>
+              </div>
+            </dl>
+            <p class="muted">Your username is read-only.</p>
+          </div>
+          <p class="muted account-edit-note">You can edit your personal and contact details below.</p>
+          <form method="post" class="account-form customer-account-form profile-form">
+            {% csrf_token %}
+            {% if form.non_field_errors %}<div class="form-errors form-error"
+     role="alert">{{ form.non_field_errors }}</div>{% endif %}
+            <div class="account-field-grid">
+              {% for field in form %}
+                <div class="form-field form-group{% if field.errors %} has-errors{% endif %}">
+                  <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.name == "email" and email_verified %} <span class="profile-badge profile-email"><span aria-hidden="true">&#10003;</span> Verified</span>{% endif %}</label>
+                  {{ field }}
+                  {% if field.errors %}<div id="{{ field.auto_id }}_error"
+     class="form-errors form-error"
+     role="alert">{{ field.errors }}</div>{% endif %}
+                  {% if field.help_text %}<div id="{{ field.auto_id }}_helptext"
+     class="help-text">{{ field.help_text }}</div>{% endif %}
+                </div>
+              {% endfor %}
+            </div>
+            <button class="button" type="submit">Save Changes &rarr;</button>
+          </form>
+        </div>
+        <section class="account-card profile-recent-card" aria-labelledby="recent-order-heading">
+          <div class="profile-recent-heading"><h2 id="recent-order-heading">Recent order</h2><a class="text-link" href="{% url 'orders:list' %}">View all &rarr;</a></div>
+          {% if recent_order %}
+            <a class="profile-recent-order" href="{% url 'orders:detail' recent_order.order_number %}">
+              <span class="profile-order-image">{% if recent_image %}<img src="{{ recent_image.url }}" alt="" width="56" height="64" loading="lazy">{% else %}<span aria-hidden="true">B.</span>{% endif %}</span>
+              <span class="profile-order-info"><strong>{{ recent_order.order_number }}</strong><span class="muted">{{ recent_item.product_name|default:'Order details' }} &middot; Rs. {{ recent_order.grand_total|floatformat:2 }}</span></span>
+              <span class="status-badge status-{{ recent_order.order_status|lower }}">{{ recent_order.get_order_status_display }}</span>
+            </a>
+{% else %}<p class="muted profile-order-empty">You haven't placed an order yet.</p>{% endif %}
+  </section>
   </div>
-</section>
+  </div>
+  </section>
 {% endblock %}

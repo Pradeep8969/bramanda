@@ -1,0 +1,11 @@
+{
+  "name": "bramanda-formatting",
+  "private": true,
+  "scripts": {
+    "format:assets": "prettier --write \"static/**/*.css\" \"static/**/*.js\" \"products/tests_js/*\" \"scripts/*.cjs\"",
+    "check:assets": "prettier --check \"static/**/*.css\" \"static/**/*.js\" \"products/tests_js/*\" \"scripts/*.cjs\""
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}

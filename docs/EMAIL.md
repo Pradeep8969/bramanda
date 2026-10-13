@@ -1,7 +1,7 @@
 # Customer email in local development
 
 Customer signup still schedules one text/HTML welcome email after database commit.
-Normal registration and Google/Facebook signup use the same helper; returning login
+Normal registration and Google signup use the same helper; returning login
 does not send another welcome. SMTP/backend failures and zero-message results log
 sanitized errors and do not prevent account creation. Allauth's other account email
 features are preserved. Order invoices and receipts remain available as web pages.

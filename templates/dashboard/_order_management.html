@@ -1,0 +1,26 @@
+<div class="staff-columns order-management">
+  <article class="staff-panel">
+    <h2>Order status</h2>
+    <p class="staff-current-status">Current: <span class="status-badge status-{{ order.order_status|lower }}">{{ order.get_order_status_display }}</span></p>
+    <h2>Payment status</h2>
+    <p class="staff-current-status">Current: <span class="status-badge status-{{ order.payment_status|lower }}">{{ payment_status_label }}</span></p>
+    {% if can_update_cod_payment %}
+      <form class="staff-update-form" method="post" action="{{ payment_action }}">
+        {% csrf_token %}
+        {% include fields_template with form=payment_form %}
+        <button class="button" type="submit">Update payment</button>
+      </form>
+    {% elif order.payment_method == "ESEWA" %}
+      <p class="muted">eSewa payment status is updated through secure payment verification.</p>
+    {% endif %}
+  </article>
+  <article class="staff-panel">
+    <h2>Delivery status</h2>
+    <p class="staff-current-status">Current: <span class="status-badge status-{{ order.delivery_status|lower }}">{{ order.get_delivery_status_display }}</span></p>
+    <form class="staff-update-form" method="post" action="{{ delivery_action }}">
+      {% csrf_token %}
+      {% include fields_template with form=delivery_form %}
+      <button class="button" type="submit">Update delivery</button>
+    </form>
+  </article>
+</div>

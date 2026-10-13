@@ -6,11 +6,11 @@ from django.db import transaction
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-from .models import User
 from .mail_diagnostics import send_safely
+from .models import User
 
 logger = logging.getLogger(__name__)
-WELCOME_SUBJECT = 'Welcome to BRAMANDA – THE UNDISCOVERED'
+WELCOME_SUBJECT = "Welcome to BRAMANDA – THE UNDISCOVERED"
 
 
 def schedule_welcome_email(user):
@@ -18,18 +18,22 @@ def schedule_welcome_email(user):
     if user.role != User.Role.CUSTOMER or not user.email:
         return
     context = {
-        'customer_name': user.first_name or user.username,
-        'login_url': settings.PUBLIC_BASE_URL + reverse('accounts:login'),
-        'shop_url': settings.PUBLIC_BASE_URL + reverse('products:shop'),
+        "customer_name": user.first_name or user.username,
+        "login_url": settings.PUBLIC_BASE_URL + reverse("accounts:login"),
+        "shop_url": settings.PUBLIC_BASE_URL + reverse("products:shop"),
     }
     recipient = user.email
 
     def send():
         message = EmailMultiAlternatives(
-            WELCOME_SUBJECT, render_to_string('accounts/email/welcome.txt', context),
-            settings.DEFAULT_FROM_EMAIL, [recipient],
+            WELCOME_SUBJECT,
+            render_to_string("accounts/email/welcome.txt", context),
+            settings.DEFAULT_FROM_EMAIL,
+            [recipient],
         )
-        message.attach_alternative(render_to_string('accounts/email/welcome.html', context), 'text/html')
-        send_safely(message, logger, 'Welcome')
+        message.attach_alternative(
+            render_to_string("accounts/email/welcome.html", context), "text/html"
+        )
+        send_safely(message, logger, "Welcome")
 
     transaction.on_commit(send)

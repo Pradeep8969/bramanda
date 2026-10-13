@@ -17,7 +17,7 @@ Mocked write failures exercise transaction rollback. Sequential final-stock and 
 | Test modules | Important coverage |
 | --- | --- |
 | `accounts/tests.py`, `accounts/test_customer_auth.py` | Custom user defaults and roles, homepage, registration, hashed passwords, fixed CUSTOMER role, password validation, duplicate username, login/safe next, inactive login denial, POST logout, own profile editing, restricted fields, CSRF |
-| `accounts/test_social_auth.py` | Google/Facebook POST initiation and mocked callbacks, CSRF/state validation, auto-signup and returning login, CUSTOMER/privilege enforcement, no-credential pages, SocialApp/admin configuration without Sites, duplicate email rejection, explicit account connection, redirects, preserved password login/registration and management roles |
+| `accounts/test_social_auth.py` | Google POST initiation and mocked callbacks, CSRF/state validation, auto-signup and returning login, CUSTOMER/privilege enforcement, no-credential pages, SocialApp/admin configuration without Sites, duplicate email rejection, explicit account connection, redirects, preserved password login/registration and management roles |
 | `accounts/test_welcome_email.py`, `accounts/test_email_config.py`, `accounts/test_auth_routes.py` | Registration email validation, branded welcome messages, post-commit behavior, sanitized failure handling, mocked social welcome delivery, SMTP configuration, local defaults, unavailable recovery routes, and preserved login/signup/profile/social/password-change routes |
 | `products/tests.py`, `products/test_storefront.py` | Model/form validation, slugs/collisions, unique SKU/variant combination, nonnegative price/stock, reusable seed command, active catalog visibility, search, combined filters, sorting, galleries, featured products, navigation, bounded prefetch query count |
 | `cart/tests.py` | Login, account isolation, add/update/remove, quantity/stock limits, inactive variants, computed Decimal totals, untrusted prices, stock warnings, no stock change during cart operations, constraints, POST/CSRF requirements |
@@ -54,7 +54,7 @@ Suggested manual review before submission: inspect storefront/product/cart/check
 
 ## Current verification
 
-The following results were verified using the existing `.\venv\Scripts\python.exe` environment on 2026-10-08. The payment integration adds 47 tests to the previous 251-test baseline. Social-login customers may create a local BRAMANDA password through the verified email reset flow without removing Google/Facebook login. Both providers remain tested through mocked OAuth callbacks before and after password creation, preserving account identity and CUSTOMER privileges.
+The earlier payment integration verification below was recorded on 2026-10-08. Password recovery endpoints have since been removed and are not restored by cancellation work. Google OAuth and ordinary password signup/login remain covered by mocked and local authentication tests. Historical Facebook identities are retained but cannot initiate OAuth. See [retired order cancellation](ORDER_CANCELLATION.md) for the retained historical and payment safeguards.
 
 | Command | Result |
 | --- | --- |

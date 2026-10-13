@@ -1,13 +1,39 @@
 from django.contrib import admin
 
-from .models import Payment
+from .models import Payment, PaymentVerification
 
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('order', 'payment_method', 'status', 'amount', 'provider_reference', 'paid_at')
-    list_filter = ('payment_method', 'status')
+    list_display = (
+        "order",
+        "payment_method",
+        "status",
+        "amount",
+        "provider_reference",
+        "paid_at",
+    )
+    list_filter = ("payment_method", "status")
     readonly_fields = tuple(field.name for field in Payment._meta.fields)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(PaymentVerification)
+class PaymentVerificationAdmin(admin.ModelAdmin):
+    list_display = (
+        "payment",
+        "checked_at",
+        "provider_status",
+        "error_code",
+        "http_status",
+        "error",
+    )
+    readonly_fields = tuple(field.name for field in PaymentVerification._meta.fields)
 
     def has_add_permission(self, request):
         return False

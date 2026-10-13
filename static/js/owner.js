@@ -37,17 +37,28 @@
   });
   closeButton.addEventListener('click', () => close(true));
   backdrop.addEventListener('click', () => close(true));
-  sidebar.addEventListener('click', event => {
+  sidebar.addEventListener('click', (event) => {
     if (event.target.closest('a') && mobile.matches) close();
   });
-  document.addEventListener('keydown', event => {
+  document.addEventListener('keydown', (event) => {
     if (!shell.classList.contains('owner-menu-open')) return;
-    if (event.key === 'Escape') { event.preventDefault(); close(true); }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close(true);
+    }
     if (event.key !== 'Tab') return;
-    const items = [...sidebar.querySelectorAll('a,button')].filter(item => !item.hidden && !item.disabled);
-    const first = items[0], last = items[items.length - 1];
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    const items = [...sidebar.querySelectorAll('a,button')].filter(
+      (item) => !item.hidden && !item.disabled,
+    );
+    const first = items[0],
+      last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
   mobile.addEventListener('change', configure);
   configure();

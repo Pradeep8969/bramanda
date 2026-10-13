@@ -1,4 +1,5 @@
-{% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+{% if form.non_field_errors %}<div class="form-errors form-error"
+     role="alert">{{ form.non_field_errors }}</div>{% endif %}
 {% for field in form %}
-{% if field.name == 'quantity_change' %}{% include 'accounts/_account_field.html' with field_label='Quantity Change' %}{% elif field.name == 'note' %}{% include 'accounts/_account_field.html' with field_label='Reason / Note' %}{% else %}{% include 'accounts/_account_field.html' %}{% endif %}
+  {% if field.is_hidden %}{{ field }}{{ field.errors }}{% elif field.name == "quantity_change" %}{% include "accounts/_account_field.html" with field_label="Quantity Change" %}{% elif field.name == "note" %}{% include "accounts/_account_field.html" with field_label="Reason / Note" %}{% else %}{% include "accounts/_account_field.html" %}{% endif %}
 {% endfor %}

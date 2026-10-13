@@ -1,0 +1,11 @@
+venv/
+.venv/
+.git/
+node_modules/
+**/migrations/
+artifacts/
+media/
+staticfiles/
+*.sqlite3*
+.env*
+**/*.html

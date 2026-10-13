@@ -1,8 +1,90 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 {% block title %}Payment Status | BRAMANDA{% endblock %}
-{% block content %}<section class="container section customer-page"><p class="eyebrow">BRAMANDA / THE UNDISCOVERED</p>
-{% if payment.status == 'PAID' %}<h1 class="page-title">Payment successful</h1><p>Amount Paid: Rs. {{ payment.amount|floatformat:2 }}</p>
-{% else %}<h1 class="page-title">Payment status: {{ payment.status }}</h1><p>No paid receipt is available for this attempt.</p>{% endif %}
-<p>{{ order.order_number }}</p><p>Order Status: {{ order.get_order_status_display }}</p>
-{% if payment.review_required %}<p class="form-errors">Payment received, but this order requires staff review before fulfillment. Please contact BRAMANDA with your order number.</p>{% endif %}
-{% include 'payments/_actions.html' %}</section>{% endblock %}
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/payments.css' %}">
+  <script src="{% static 'js/payment-result.js' %}" defer></script>
+  <section class="container section payment-result" data-payment-result data-state="{{ display.state }}">
+    <p class="eyebrow">BRAMANDA / THE UNDISCOVERED</p>
+    <div class="payment-panel">
+      <span class="payment-symbol" aria-hidden="true" data-symbol>{{ display.symbol }}</span>
+      <p class="eyebrow">SECURE ESEWA CHECKOUT</p>
+      <h1 class="page-title" data-title>{{ display.title }}</h1>
+      <p data-description>{{ display.description }}</p>
+      <dl class="payment-facts">
+        <div>
+          <dt>Payment status</dt>
+          <dd data-status>
+            {{ payment.get_status_display }}
+          </dd>
+        </div>
+        <div>
+          <dt>Total amount</dt>
+          <dd>
+            NPR {{ payment.amount|floatformat:2 }}
+          </dd>
+        </div>
+        <div>
+          <dt>Order number</dt>
+          <dd>
+            {{ order.order_number }}
+          </dd>
+        </div>
+        <div>
+          <dt>Payment method</dt>
+          <dd>
+            eSewa
+          </dd>
+        </div>
+        <div>
+          <dt>Transaction reference</dt>
+          <dd data-reference>
+            {{ display.reference }}
+          </dd>
+        </div>
+        <div>
+          <dt>Last verified</dt>
+          <dd data-verified>
+            {{ payment.last_verified_at|date:'c'|default:'Not checked successfully yet' }}
+          </dd>
+        </div>
+        <div>
+          <dt>Last check attempted</dt>
+          <dd data-checked>
+            {{ payment.last_checked_at|date:'c'|default:'Not checked yet' }}
+          </dd>
+        </div>
+        <div>
+          <dt>Order status</dt>
+          <dd data-order-status>
+            {{ order.get_order_status_display }}
+          </dd>
+        </div>
+        <div>
+          <dt>Provider status</dt>
+          <dd data-provider>
+            {{ payment.provider_status|default:'Not available yet' }}
+          </dd>
+        </div>
+      </dl>
+      <form method="post" action="{% url 'payments:recheck' payment.transaction_uuid %}" data-verify-form>
+        {% csrf_token %}<button class="button" type="submit" data-verify><span class="payment-spinner" hidden aria-hidden="true"></span><span data-button-text>Verify Payment</span></button>
+      </form>
+      <p class="verification-feedback" role="status" aria-live="polite" aria-atomic="true" data-feedback></p>
+      <div class="order-actions">
+        <a class="btn btn-outline" href="{% url 'orders:detail' order.order_number %}">View order details</a>
+        <a class="btn btn-outline order-invoice-link"
+           href="{% url 'payments:invoice' order.order_number %}">View Order Confirmation / Invoice</a>
+        <form method="post"
+              action="{% url 'payments:retry' order.order_number %}"
+              data-retry
+              {% if not display.retry_url %}hidden{% endif %}>{% csrf_token %}<button class="button" type="submit">Retry eSewa Payment</button></form>
+        <a class="btn btn-outline"
+           data-continue
+           href="{% url 'payments:pay' payment.transaction_uuid %}"
+           {% if not display.can_continue %}hidden{% endif %}>Continue eSewa Payment</a>
+      </div>
+      <p class="payment-note">A browser redirect is not proof of payment. BRAMANDA confirms payment directly with eSewa.</p>
+    </div>
+  </section>
+{% endblock %}

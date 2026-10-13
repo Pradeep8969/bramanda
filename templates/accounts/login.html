@@ -1,19 +1,28 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static socialaccount %}
 {% block title %}Login | BRAMANDA{% endblock %}
 {% block content %}
-<section class="container section account-page login-page">
-  <div class="account-card login-card">
-    <header class="account-heading"><p class="eyebrow">BRAMANDA</p><h1 class="page-title">Customer Login</h1><p class="muted">Welcome back. Your next discovery starts here.</p></header>
-    <link rel="stylesheet" href="{% static 'css/social-auth.css' %}">
-    {% include 'accounts/_social_login.html' %}
-    <form method="post" class="account-form customer-account-form">
-      {% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
-      {% if form.non_field_errors %}<div class="form-errors form-error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-      {% for field in form %}{% include 'accounts/_account_field.html' %}{% endfor %}
-      <button class="button" type="submit">Login &rarr;</button>
-    </form>
-    <div class="account-secondary"><p class="muted">New to BRAMANDA?</p><a class="btn btn-outline" href="{% url 'accounts:register' %}">Create Account</a></div>
-  </div>
-</section>
+  <section class="container section account-page login-page">
+    <div class="account-card login-card">
+      <header class="account-heading">
+        <p class="eyebrow">BRAMANDA</p>
+        <h1 class="page-title">Customer Login</h1>
+        <p class="muted">Welcome back. Your next discovery starts here.</p>
+      </header>
+      <link rel="stylesheet" href="{% static 'css/social-auth.css' %}">
+      {% include "accounts/_social_login.html" %}
+      <form method="post" class="account-form customer-account-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% if form.non_field_errors %}<div class="form-errors form-error"
+     role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+          {% include "accounts/_account_field.html" %}
+        {% endfor %}
+        <button class="button" type="submit">Login &rarr;</button>
+      </form>
+      <div class="account-secondary"><p class="muted">New to BRAMANDA?</p><a class="btn btn-outline"
+   href="{% url 'accounts:register' %}">Create Account</a></div>
+    </div>
+  </section>
 {% endblock %}
