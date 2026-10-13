@@ -50,3 +50,25 @@ Thumbs.db
 /artifacts/formatting-audit/asset-summary.json
 /artifacts/formatting-audit/files.json
 /artifacts/formatting-audit/git-status-before.txt
+
+# Local historical audit helpers, reports, CSS snapshots, and design reference.
+# Exact paths only; preserve these files locally without hiding project source.
+/artifacts/audit_order_management_browser.py
+/artifacts/audit_typography_baseline.py
+/artifacts/audit_typography_browser.py
+/artifacts/formatting-audit/verify-assets.cjs
+/artifacts/formatting-audit/verify.py
+/artifacts/order-management-report.md
+/artifacts/summarize_typography.py
+/artifacts/typography-original-css/base.css
+/artifacts/typography-original-css/checkout.css
+/artifacts/typography-original-css/dashboard.css
+/artifacts/typography-original-css/home.css
+/artifacts/typography-original-css/inventory.css
+/artifacts/typography-original-css/payments.css
+/artifacts/typography-original-css/product-options.css
+/artifacts/typography-original-css/social-auth.css
+/artifacts/typography-original-css/storefront.css
+/artifacts/typography-report.md
+/artifacts/verify_typography_scope.py
+/homepage-reference.png
